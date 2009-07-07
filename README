@@ -1,0 +1,177 @@
+README - 2009/07/07
+
+2009: An Odd Space - v0.20.2
+
+This project is very much alpha software. Most of the variables are configurable
+in the external XML files located in 'xmlData'.
+
+----------------
+Licensing:
+----------------
+
+All actionscript and mxml code was written by me and is released for use under a MIT license 
+(http://www.opensource.org/licenses/mit-license.php).
+
+All pictures and models in the 'media' folder made by me are released under a Creative Commons
+attribution license (http://creativecommons.org/licenses/by-nc-nd/2.5/).
+
+The 'Sun Night' Flex theme is released under a creative commons attribution license 
+(http://creativecommons.org/licenses/by/2.5/) by Erick Ghaumez - http://www.scalenine.com
+
+The song, 'Sodium Sonet', is used with permission from Timothy Lamb - http://trash80.net under
+a creative commons license (http://creativecommons.org/licenses/by-nc-nd/2.5/).
+
+----------------
+Building:
+----------------
+
+Untar the full package, and pass 'anoddspace.mxml' to mxmlc (the Flex compiler). Since this
+project now uses flex components, it won't be possible to build with the Flash IDE. You can
+get a copy of the Flex SDK from the link below.
+
+----------------
+Tools used:
+----------------
+
+* Adobe Flex 3 SDK - (http://opensource.adobe.com/wiki/display/flexsdk/)
+* GIMP - textures and scaling / importing blender renders to .png (http://www.gimp.org/)
+* blender - 3D modeling and rendering (http://www.blender.org/)
+* audacity - editing and encoding audio files (http://audacity.sourceforge.net/)
+* espeak - TTS engine (http://espeak.sourceforge.net/)
+* abox - audio synthesizer (http://www.andyware.com/index.html)
+
+----------------
+Controls:
+----------------
+
+Control the player ship with the arrow keys. You can target objects with the mouse
+or the 't' key. Target closest 'enemy' with the 'e' key. Use space to activate modules.
+
+In the level editor, you can use the arrow keys or the radar overlay to pan around the map. 'r'
+is a shortcut to rotate the selected object.
+
+----------------
+Contact:
+----------------
+
+The most current files will be available on the project page: http://anoddspace.sourceforge.net/
+
+To contact me directly, use d+-+jenkins+-+35@gm+-+ail.com (minus '+-+'s)
+
+----------------
+Release Notes:
+----------------
+
+*0.20
+
+Rewrote most of the Game UI using flex components. Started work on drag-selecting multiple stuff
+at one time. Still need to figure out how to handle the selected objects (grouping and display, etc)
+
+Originally wrote out some .mxml files for the UI, but ran into a bug(?) using the popupmanager class
+where the framerate would go unlocked (+60fps). Now I'm just extending the flex components as 
+actionscript classes. Might look at shifting the movement stuff to a regular timer instead of 
+listening for the enter_frame event.
+
+*0.19
+
+Now officially using flex components. Rewrote the preloader.as & preloaderUI.as classes with Flex
+UI components at 'app/appRoot.as'.
+
+Added 'app/baseClasses/droneLoader.as' which is loaded by the 'realMover.as' class. Includes methods
+for launching and recalling drones from ships.
+
+Next todo is updating the 'gameUI' class with controls for the current ship's drones, and adding an
+overview of all controlled objects (ala Sins of a Solar Empire).
+
+*v0.18
+
+Began work on the 'drone' class to replace the lightFighter class. The drone now loads one module
+based on the 'droneSpec' element of the parent hanger in the mapData XML file. Still to do is adding
+more actions for the drone based on their module-type (ie. mining, repair) and updating the hanger
+class for use by the realMover class.
+
+*v0.17
+
+Updates to the level editor allowing the specification of 'factions' for most objects. Added
+a 'player start' object that determine's the player's start position and faction. Starting ship
+type is still based on the profile data in 'xmlData/playerData/testPlayer.xml'
+
+Updated preloader that allows the selection of maps listed in 'xmlData/mapData/mapList.xml'
+
+New ship type, lightFreighter added, along with some updates to 'ai/artificialIgnorance.as' that
+allow mining ships to dock with the frieghter while set to the 'harvest asteroids' action. The frieghter
+will, in turn look for another dock target once its cargo is full.
+
+*v0.16
+
+Big update to the level editor. You can now edit object details including ship modules, and asteroid
+mineral amounts. You can save edited objects as presets for quick replication.
+
+There's no error checking on the ship modules, but the current available modules are 'miningLaserSM', 
+and 'laserSM'.
+
+Oh, and this is the first release built with the Adobe Flex SDK. The 'port' from the Flash IDE 
+consisted of the following:
+
+----------------------------
+[SWF(width=800,height=600)]
+stage.frameRate = 35;
+----------------------------
+
+*v0.15
+
+Level editor is mostly finished. Abstracted the userInput to work with the editor, so you can use
+the arrow keys to pan the map around as well as dragging the little box on the radar.
+
+Changed gameloader.as to parse the new format of the saved map xml data. Seems to be working pretty
+well.
+
+Still todo:
+- editor
+	- flesh out the 'edit details' functions
+	- ^ add function to change the parallax image
+- gameloader / preloader
+	- function to select different maps, probably need a 'map list' config file
+	- intro / benchmark
+- baseClasses
+	- correctly parse the new xmlData from the map editor.
+	
+	
+*v0.14
+
+Started work on the level editor. You can save the map data to the clipboard, but the delete
+object needs to be finished. Pretty fun to play with so far.
+
+
+*v0.13
+
+Pretty big update. Refactored the 'realMover.as' class, and organized the code a bit. Now
+using package namespaces to keep the source a little cleaner.
+
+Updated the targeting, so now individual modules can have different targets. Can now target
+the closest 'enemy'. Right now implemented with a faction string. Still more work to do there.
+
+Dummy ship now has a 'go postal' action that makes it attack anything hostile in sensor range.
+If it's not within the AI's 'orbit range' (a hack for now), it will set and move to a point
+that is within range.
+
+I guess the next big todo will be the preloader/performance benchmark
+
+
+*v0.12
+
+Added some actions to the 'realMover.as' class. The dummy ship in the demo can now follow
+you around accurately, and it can auto mine and sell minerals at the station. 
+
+Introduced a bug where you can sell while not docked at the station
+
+Next big todo is targeting and auto-attacking
+
+
+*v0.11
+
+The playable map is pretty limited. There are a few fighter hangers that you can shoot
+at. You can mine some asteroids, and sell them at the station. And you can tell the
+'dummy' ship to follow you around (wildly - this will be worked on for the next release).
+
+This first sourceforge release is build 0.11

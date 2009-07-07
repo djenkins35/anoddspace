@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<ships>
+	<ship shipType="starter">
+		<name>Starter</name>
+		<imageURL>ship.starter.png</imageURL>
+		<thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+		<thrustImageOffset>0,36</thrustImageOffset>
+		
+		<hull>1000</hull>
+		<shield>1000</shield>
+		<shieldRegen>0.5</shieldRegen>
+		
+		<acceleration>0.05</acceleration>
+		<angularSpeed>6</angularSpeed>
+		<maxSpeed>5</maxSpeed>
+		
+		<radarRange>10000</radarRange>
+		<cargoCapacity>500</cargoCapacity>
+		<droneCapacity>100</droneCapacity>
+		
+		<maxExternalModules>2</maxExternalModules>
+		<maxInternalModules>2</maxInternalModules>
+		
+		<externalHardPoints>
+			<hardPoint>10,20</hardPoint>
+			<hardPoint>30,20</hardPoint>
+		</externalHardPoints>
+		
+		<faction></faction>
+	</ship>
+	
+	<ship shipType="speedyTest">
+		<name>Speedy</name>
+		<imageURL>speedy_01.png</imageURL>
+		<thrustImageURL>speedy_01.thrust.png</thrustImageURL>
+		<thrustImageOffset>3,45</thrustImageOffset>
+		
+		<hull>100</hull>
+		<shield>100</shield>
+		<shieldRegen>0.2</shieldRegen>
+		
+		<acceleration>0.25</acceleration>
+		<angularSpeed>4</angularSpeed>
+		<maxSpeed>30</maxSpeed>
+		
+		<radarRange>10000</radarRange>
+		<cargoCapacity>300</cargoCapacity>
+		
+		<maxExternalModules>0</maxExternalModules>
+		<maxInternalModules>2</maxInternalModules>
+		
+		<faction></faction>
+	</ship>
+	
+	<ship shipType="lightTransport">
+		<name>Light Transport</name>
+		<imageURL>light.transport.png</imageURL>
+		<thrustImageURL>light.transport.thrust.png</thrustImageURL>
+		<thrustImageOffset>10,63</thrustImageOffset>
+		
+		<dockPoint>0,0</dockPoint>
+		
+		<hull>1000</hull>
+		<shield>1000</shield>
+		<shieldRegen>0.5</shieldRegen>
+		
+		<acceleration>0.03</acceleration>
+		<angularSpeed>3</angularSpeed>
+		<maxSpeed>3</maxSpeed>
+		
+		<radarRange>10000</radarRange>
+		<cargoCapacity>20000</cargoCapacity>
+		
+		<maxExternalModules>2</maxExternalModules>
+		<maxInternalModules>2</maxInternalModules>
+		
+		<externalHardPoints>
+			<hardPoint>10,30</hardPoint>
+			<hardPoint>40,30</hardPoint>
+		</externalHardPoints>
+		
+		<faction></faction>
+	</ship>
+</ships>

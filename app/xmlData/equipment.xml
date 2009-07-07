@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<equipment>
+	<modules>
+		<module moduleType="external">
+			<name>miningLaserSM</name>
+			<baseClass>miningLaser</baseClass>
+			<imageURL></imageURL>
+			
+			<delay>4</delay>
+			<duration>12</duration>
+			<miningRange>200</miningRange>
+			<miningAmount>100</miningAmount>
+			<grLineStyle>3,0xFF9900,0.5</grLineStyle>
+		</module>
+		
+		<module moduleType="external">
+			<name>laserSM</name>
+			<baseClass>laser</baseClass>
+			<imageURL></imageURL>
+			
+			<damageShield>25</damageShield>
+			<damageHull>15</damageHull>
+			<delay>8</delay>
+			<duration>3</duration>
+			<attackRange>1000</attackRange>
+			<grLineStyle>2,0x55FF22,0.6</grLineStyle>
+		</module>
+		
+		<module moduleType="external">
+			<name>laserDroneSM</name>
+			<baseClass>laser</baseClass>
+			<imageURL></imageURL>
+			
+			<damageShield>5</damageShield>
+			<damageHull>1</damageHull>
+			<delay>4</delay>
+			<duration>1</duration>
+			<attackRange>400</attackRange>
+			<grLineStyle>2,0xAA0022,0.6</grLineStyle>
+		</module>
+	</modules>
+	
+	<drones>
+		<drone droneType="combat">
+			<name>Light Fighter</name>
+			<baseClass>lightFighter</baseClass>
+			<imageURL>light.fighter.01.png</imageURL>
+			
+			<module>laserDroneSM</module>
+			
+			<acceleration>1</acceleration>
+			<angularSpeed>0.496</angularSpeed>
+			<maxSpeed>8</maxSpeed>
+			<hull>25</hull>
+			<shield>10</shield>
+			<shieldRegen>0.1</shieldRegen>
+			
+			<radarRange>2000</radarRange>
+			<attackRange>500</attackRange>
+			<attackRange2>100</attackRange2>
+		</drone>
+	</drones>
+	
+	<hangers>
+		<hanger hangerType="combat">
+			<name>Fighter Hanger</name>
+			<baseClass>fighterHanger</baseClass>
+			<imageURL>hanger_02.png</imageURL>
+			
+			<droneSpec>lightFighter</droneSpec>
+			
+			<fighterCapacity>20</fighterCapacity>
+			<launchDelay>8</launchDelay>
+			<radarRange>1800</radarRange>
+			<hull>100</hull>
+			<shield>20</shield>
+			<shieldRegen>0.2</shieldRegen>
+		</hanger>
+	</hangers>
+</equipment>

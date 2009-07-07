@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<player>
+	<ships>
+		<ship active="yes">
+			<shipType>starter</shipType>
+			<location></location>
+			
+			<modules>
+				<module moduleType="external" position="0">miningLaserSM</module>
+				<module moduleType="external" position="1">laserSM</module>
+				<module moduleType="internal" position="0">barfBag</module>
+				<module moduleType="internal" position="1">dragChute</module>
+			</modules>
+			
+			<cargo>
+				<item volume="200">minerals</item>
+			</cargo>
+		</ship>
+		
+		<ship active="no">
+			<shipType>speedyTest</shipType>
+			<location>Base 1</location>
+			
+			<modules>
+				<module moduleType="internal" position="0">barfBag</module>
+				<module moduleType="internal" position="1">dragChute</module>
+			</modules>
+			
+			<cargo></cargo>
+		</ship>
+	</ships>
+	
+	<money>0</money>
+	
+	<equipment>
+		<item>
+			<description>foo</description>
+			<location>foo</location>
+		</item>
+	</equipment>
+</player>

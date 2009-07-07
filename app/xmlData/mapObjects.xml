@@ -1,0 +1,49 @@
+<? xml version="1.0"?>
+
+<mapObjects>
+	<playerStart>
+		<name>Player Start</name>
+		<imageURL>player.start.png</imageURL>
+		<faction>faction1</faction>
+	</playerStart>
+
+	<hangers>
+		<hanger hangerType="combat">
+			<name>Fighter Hanger</name>
+			<baseClass>fighterHanger</baseClass>
+			<imageURL>hanger_02.png</imageURL>
+			
+			<fighterCapacity>20</fighterCapacity>
+			<launchDelay>8</launchDelay>
+			<radarRange>1800</radarRange>
+			<hull>100</hull>
+			<shield>20</shield>
+			<shieldRegen>0.2</shieldRegen>
+		</hanger>
+	</hangers>
+	
+	<starBases>
+		<starBase>
+			<name>Base 1</name>
+			<imageURL>base01.png</imageURL>
+			
+			<hull>10000</hull>
+			<shield>10000</shield>
+			<shieldRegen>1</shieldRegen>
+		</starBase>
+	</starBases>
+	
+	<asteroids>
+		<asteroid>
+			<name>Asteroid 1</name>
+			<imageURL>asteroid_01.png</imageURL>
+			<minerals>10000</minerals>
+		</asteroid>
+		
+		<asteroid>
+			<name>Asteroid 2</name>
+			<imageURL>asteroid_02.png</imageURL>
+			<minerals>10000</minerals>
+		</asteroid>
+	</asteroids>
+</mapObjects>

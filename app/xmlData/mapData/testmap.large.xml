@@ -1,0 +1,1091 @@
+<?xml version="1.0"?>
+
+<mapObjects>
+
+<playerStart>
+  <name>Player Start</name>
+  <imageURL>player.start.png</imageURL>
+  <OAIndex>0</OAIndex>
+  <position>-4000,-42</position>
+  <faction>faction1</faction>
+</playerStart>
+
+<starBase>
+  <name>Faction 1 Base</name>
+  <imageURL>base01.png</imageURL>
+  <hull>10000</hull>
+  <shield>10000</shield>
+  <OAIndex>1</OAIndex>
+  <position>-4190.1,-75</position>
+  <faction>faction1</faction>
+</starBase>
+
+<starBase>
+  <name>Faction 2 Base</name>
+  <imageURL>base01.png</imageURL>
+  <hull>10000</hull>
+  <shield>10000</shield>
+  <OAIndex>2</OAIndex>
+  <position>5439.8,205</position>
+  <faction>faction2</faction>
+</starBase>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>3</OAIndex>
+  <position>1068.55,226.95</position>
+  <rotation>30.96375653207352</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>4</OAIndex>
+  <position>910.05,234.05</position>
+  <rotation>63.43494882292201</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>5</OAIndex>
+  <position>1096.2,109.9</position>
+  <rotation>-145.4914770123316</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>6</OAIndex>
+  <position>724.9,294.05</position>
+  <rotation>161.56505117707798</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>7</OAIndex>
+  <position>678.5,349.9</position>
+  <rotation>174.28940686250036</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>8</OAIndex>
+  <position>546.85,624</position>
+  <rotation>-33.690067525979785</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>9</OAIndex>
+  <position>726.6,454.35</position>
+  <rotation>125.53767779197439</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>10</OAIndex>
+  <position>616.9,400.1</position>
+  <rotation>129.28940686250039</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>11</OAIndex>
+  <position>628.45,267.1</position>
+  <rotation>-65.22485943116808</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>12</OAIndex>
+  <position>881.3,71.15</position>
+  <rotation>-59.03624346792648</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>13</OAIndex>
+  <position>898.2,334.4</position>
+  <rotation>42.87890360333855</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>14</OAIndex>
+  <position>744.05,390.2</position>
+  <rotation>40.23635830927382</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>15</OAIndex>
+  <position>1145.2,401.7</position>
+  <rotation>23.19859051364819</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>16</OAIndex>
+  <position>855.95,523.6</position>
+  <rotation>39.8055710922652</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>17</OAIndex>
+  <position>1006.3,504.05</position>
+  <rotation>-39.472459848343824</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>18</OAIndex>
+  <position>1000.55,415.6</position>
+  <rotation>-61.18920625702693</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>19</OAIndex>
+  <position>658.45,56.1</position>
+  <rotation>-113.96248897457818</rotation>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>20</OAIndex>
+  <position>953.25,579.45</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>21</OAIndex>
+  <position>645.85,182</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>22</OAIndex>
+  <position>981.3,334.5</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>23</OAIndex>
+  <position>435,455</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>24</OAIndex>
+  <position>455,70</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>25</OAIndex>
+  <position>540,890</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>26</OAIndex>
+  <position>265,940</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>27</OAIndex>
+  <position>330,-170</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>28</OAIndex>
+  <position>1445,-330</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>29</OAIndex>
+  <position>275,495</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>30</OAIndex>
+  <position>970,975</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>31</OAIndex>
+  <position>835,-645</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>32</OAIndex>
+  <position>-150,560</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>33</OAIndex>
+  <position>-60,1010</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>34</OAIndex>
+  <position>205,185</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>35</OAIndex>
+  <position>-35,770</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>36</OAIndex>
+  <position>285,695</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>37</OAIndex>
+  <position>875,-345</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>38</OAIndex>
+  <position>1235,-135</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>39</OAIndex>
+  <position>575,-255</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>40</OAIndex>
+  <position>865,710</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>41</OAIndex>
+  <position>800,-190</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>42</OAIndex>
+  <position>1265,140</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>43</OAIndex>
+  <position>760,920</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>44</OAIndex>
+  <position>1075,-340</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>45</OAIndex>
+  <position>615,-460</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>46</OAIndex>
+  <position>705,1045</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>47</OAIndex>
+  <position>590,-75</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>48</OAIndex>
+  <position>345,-500</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 2</name>
+  <imageURL>asteroid_02.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>49</OAIndex>
+  <position>215,-20</position>
+</asteroid>
+
+<asteroid>
+  <name>Asteroid 1</name>
+  <imageURL>asteroid_01.png</imageURL>
+  <minerals>10000</minerals>
+  <OAIndex>50</OAIndex>
+  <position>95,280</position>
+</asteroid>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>51</OAIndex>
+  <position>-3951.65,189.2</position>
+  <faction>faction1</faction>
+</hanger>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>52</OAIndex>
+  <position>-3830.55,-312.5</position>
+  <faction>faction1</faction>
+</hanger>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>53</OAIndex>
+  <position>-4626.2,51.2</position>
+  <faction>faction1</faction>
+</hanger>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>54</OAIndex>
+  <position>-4532.8,-363.85</position>
+  <faction>faction1</faction>
+</hanger>
+
+<ship shipType="speedyTest">
+  <name>Faction 1 Speedy</name>
+  <imageURL>speedy_01.png</imageURL>
+  <thrustImageURL>speedy_01.thrust.png</thrustImageURL>
+  <thrustImageOffset>3,45</thrustImageOffset>
+  <hull>100</hull>
+  <shield>100</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <acceleration>0.25</acceleration>
+  <angularSpeed>4</angularSpeed>
+  <maxSpeed>30</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>300</cargoCapacity>
+  <maxExternalModules>0</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <OAIndex>55</OAIndex>
+  <position>-4649.35,-9.1</position>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>56</OAIndex>
+  <position>-4423.15,128.55</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>0</rotation>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="lightTransport">
+  <name>Faction 1 Transport</name>
+  <imageURL>light.transport.png</imageURL>
+  <thrustImageURL>light.transport.thrust.png</thrustImageURL>
+  <thrustImageOffset>10,63</thrustImageOffset>
+  <dockPoint>0,0</dockPoint>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.03</acceleration>
+  <angularSpeed>3</angularSpeed>
+  <maxSpeed>3</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>2000</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,30</hardPoint>
+    <hardPoint>40,30</hardPoint>
+  </externalHardPoints>
+  <OAIndex>57</OAIndex>
+  <position>-4215.25,198.1</position>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>58</OAIndex>
+  <position>-4502.5,137.8</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>0</rotation>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>59</OAIndex>
+  <position>-4458.5,195.95</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>0</rotation>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>60</OAIndex>
+  <position>-4539.8,196.2</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>0</rotation>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>61</OAIndex>
+  <position>-4047.7,168.15</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <rotation>0</rotation>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>62</OAIndex>
+  <position>-4112.95,230.9</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>63</OAIndex>
+  <position>-4112.95,165.45</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 1 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>64</OAIndex>
+  <position>-4040.7,240.55</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <faction>faction1</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>65</OAIndex>
+  <position>5259.65,443.95</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>-11.309932474020213</rotation>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>66</OAIndex>
+  <position>5177.6,435.95</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>-11.309932474020213</rotation>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>67</OAIndex>
+  <position>5177.45,512.45</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>-11.309932474020213</rotation>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Miner</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>68</OAIndex>
+  <position>5259.7,517.65</position>
+  <modules>
+    <module moduleType="external" position="0">miningLaserSM</module>
+    <module moduleType="external" position="1">miningLaserSM</module>
+  </modules>
+  <rotation>-11.309932474020213</rotation>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="lightTransport">
+  <name>Faction 2 Transport</name>
+  <imageURL>light.transport.png</imageURL>
+  <thrustImageURL>light.transport.thrust.png</thrustImageURL>
+  <thrustImageOffset>10,63</thrustImageOffset>
+  <dockPoint>0,0</dockPoint>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.03</acceleration>
+  <angularSpeed>3</angularSpeed>
+  <maxSpeed>3</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>2000</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,30</hardPoint>
+    <hardPoint>40,30</hardPoint>
+  </externalHardPoints>
+  <OAIndex>69</OAIndex>
+  <position>5406.2,495.6</position>
+  <rotation>0</rotation>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>70</OAIndex>
+  <position>5536.15,435.65</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <rotation>0</rotation>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>71</OAIndex>
+  <position>5640.7,444.45</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>72</OAIndex>
+  <position>5539.25,534.9</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <faction>faction2</faction>
+</ship>
+
+<ship shipType="starter">
+  <name>Faction 2 Aggressive</name>
+  <imageURL>ship.starter.png</imageURL>
+  <thrustImageURL>ship.starter.thrust.png</thrustImageURL>
+  <thrustImageOffset>0,36</thrustImageOffset>
+  <hull>1000</hull>
+  <shield>1000</shield>
+  <shieldRegen>0.5</shieldRegen>
+  <acceleration>0.05</acceleration>
+  <angularSpeed>6</angularSpeed>
+  <maxSpeed>5</maxSpeed>
+  <radarRange>10000</radarRange>
+  <cargoCapacity>500</cargoCapacity>
+  <maxExternalModules>2</maxExternalModules>
+  <maxInternalModules>2</maxInternalModules>
+  <externalHardPoints>
+    <hardPoint>10,20</hardPoint>
+    <hardPoint>30,20</hardPoint>
+  </externalHardPoints>
+  <OAIndex>73</OAIndex>
+  <position>5635.1,526.65</position>
+  <modules>
+    <module moduleType="external" position="0">laserSM</module>
+    <module moduleType="external" position="1">laserSM</module>
+  </modules>
+  <faction>faction2</faction>
+</ship>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>74</OAIndex>
+  <position>5056.4,328.35</position>
+  <faction>faction2</faction>
+</hanger>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>75</OAIndex>
+  <position>5059.1,-66.15</position>
+  <faction>faction2</faction>
+</hanger>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>76</OAIndex>
+  <position>5750.4,-54.9</position>
+  <faction>faction2</faction>
+</hanger>
+
+<hanger hangerType="combat">
+  <name>Fighter Hanger</name>
+  <baseClass>fighterHanger</baseClass>
+  <imageURL>hanger_02.png</imageURL>
+  <droneSpec>lightFighter</droneSpec>
+  <fighterCapacity>20</fighterCapacity>
+  <launchDelay>8</launchDelay>
+  <radarRange>1800</radarRange>
+  <hull>100</hull>
+  <shield>20</shield>
+  <shieldRegen>0.2</shieldRegen>
+  <OAIndex>77</OAIndex>
+  <position>5764.5,347.9</position>
+  <faction>faction2</faction>
+</hanger>
+
+</mapObjects>
