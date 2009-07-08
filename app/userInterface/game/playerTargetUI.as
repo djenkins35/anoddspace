@@ -46,7 +46,7 @@ package app.userInterface.game {
 		// Display Properties
 		private var varText:Text = new Text();
 		private var buttonWidth:int = 24;	// used to calculate button spacing
-		private var actionBar:Canvas = new Canvas();	// display container for the action buttons
+		private var actionBar:Canvas;	// display container for the action buttons
 		
 		//
 		///-- Constructor --///
@@ -56,16 +56,7 @@ package app.userInterface.game {
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.oGL = oGL;
 			this.oGL.addEventListener('gameLoaded', gameLoadedHandler);
-			
-			this.actionBar.focusEnabled = false;	// prevents the gamescreen losing keyboard focus
-			//this.actionBar.addEventListener(ListEvent.CHANGE, actionBarListener);
-			
-			//hack
-			this.actionBar.graphics.lineStyle(1,0x404040);
-			this.actionBar.graphics.beginFill(0x343434);
-			this.actionBar.graphics.drawRect(0,0,150,26);
-			this.actionBar.graphics.endFill();
-			this.actionBar.cacheAsBitmap = true;
+			this.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 		}
 		
 		//
@@ -73,26 +64,31 @@ package app.userInterface.game {
 		//
 		
 		private function checkActionArray():void {
-			
 			// if target is same faction as player, show the action menu
 			if (this.oGL.playerShip.oTarget.faction == this.oGL.playerShip.faction) {
 			
 				// only 'realMover' objects contain an AI
 				if (this.oGL.playerShip.oTarget.hasOwnProperty('AI')) {
 					// reset the actionBar
-					if (this.contains(this.actionBar)) {
+					if (this.actionBar != null && this.contains(this.actionBar)) {
 						this.removeChild(this.actionBar);
 					}
 					
 					this.actionBar = null;
 					this.actionBar = new Canvas();
-					
+					this.actionBar.focusEnabled = false;	// prevents the gamescreen losing keyboard focus
 					
 					// set up the buttons/images that relate to the current target's actionArray
 					for each (var action:String in this.oGL.playerShip.oTarget.actionArr) {
 						for each (var image:Object in this.actionArray) {
 							if (action == image.name) {
 								var oActionButton:actionButtonUI = new actionButtonUI(this.oGL, action, image.imageURL);
+								
+								// check if we need to highlight this button
+								if (action == this.oGL.playerShip.oTarget.AI.curAction) {
+									oActionButton.dispatchEvent(new Event('selected'));
+								}
+								
 								this.actionBar.addChild(oActionButton);
 								oActionButton.y = 1;
 								oActionButton.x = this.actionBar.getChildIndex(oActionButton) * this.buttonWidth + (1 * this.actionBar.getChildIndex(oActionButton));
@@ -104,10 +100,9 @@ package app.userInterface.game {
 					this.varText.validateNow();	// needed to get the correct height
 					this.actionBar.y = this.varText.textHeight;
 					
-					
+					// add the actionbar to the display list and add the button listener for selecting the highlighted button
 					this.addChild(this.actionBar);
-					
-					
+					this.actionBar.addEventListener('actionButtonClick', onActionButtonClick);
 				} else if (this.contains(this.actionBar)) {
 					this.removeChild(this.actionBar);
 				}
@@ -132,9 +127,16 @@ package app.userInterface.game {
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
-		private function actionBarListener(e:ListEvent):void {
-			// dispatch the event for the selected action
-			this.oGL.playerShip.oTarget.AI.doAction(e.target.text);
+		private function onActionButtonClick(e:Event):void {	// cycle through the buttons to see which one is selected, and deselect the rest
+			var buttonArray:Array = this.actionBar.getChildren();	// this method only works for flex components
+			
+			for each (var button:actionButtonUI in buttonArray) {
+				if (button.actionText == this.oGL.playerShip.oTarget.AI.curAction) {	// highlight this button
+					button.dispatchEvent(new Event('selected'));
+				} else {	// make sure it's not highlighted
+					button.dispatchEvent(new Event('deSelected'));
+				}
+			}
 		}
 		
 		private function onEnterFrame(e:Event):void {
@@ -168,9 +170,10 @@ package app.userInterface.game {
 		///-- Destructor --///
 		//
 		
-		public function destroy():void {
+		public function destroy(e:Event):void {
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
+			this.actionBar.removeEventListener('actionButtonClick', onActionButtonClick);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this.actionBar.removeEventListener(ListEvent.CHANGE, actionBarListener);
 		}
 	}
 }

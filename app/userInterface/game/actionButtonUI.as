@@ -20,6 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 *******************************************************************************/
 
+/*
+	This whole class only exists because you can't set a flex button's icon property from
+	an external source. They have to be compiled images as named objects.
+	
+	An alternative is this: http://blog.benstucki.net/?p=42
+*/
+
 
 package app.userInterface.game {
 
@@ -37,44 +44,51 @@ package app.userInterface.game {
 		
 		// Data Properties
 		private var oGL:gameloader;
+		public var actionText:String;	// String to display when moused-over
+		
+		// Display Properties
 		private var imageDir:String = "UI";	// path where button icons are located relative to 'oGL.imageDir'
 		private var buttonBackgroundURL:String = 'button.purple.png';	// this should probably be loaded from a config file
 		private var backgroundLoader:imageLoader;
+		private var selectedBackgroundURL:String = 'button.yellow.png';	// this one is to highlight the current target's 'curAction'
+		private var selBgLoader:imageLoader;
 		private var iconLoader:imageLoader;
-				
-		// Display Properties
+		
 		private var fillStyle:uint = 0x000000;
 		private var curLineStyle:Array;	// holder for whichever linestyle is active
 		private var grLineStyle1:Array = [1, 0x404040];	// default style
 		private var grLineStyle2:Array = [1, 0xCC4400];	// style when moused-over
 		private var buttonDims:Array = [24, 24]; // w, h
-		private var actionText:String;	// String to display when moused-over
 		
 		//
 		///-- Constructor --///
 		//
 		
-		public function actionButtonUI(oGL:gameloader, action:String, imageURL:String):void {
-			// load images
+		public function actionButtonUI(oGL:gameloader, action:String, iconURL:String):void {
 			this.oGL = oGL;
+			this.actionText = action;
 			this.imageDir = this.oGL.imageDir + '/' + this.imageDir;
+			
+			// load images
+			this.selBgLoader = new imageLoader(this.imageDir + '/' + this.selectedBackgroundURL);
+			this.selBgLoader.x = this.selBgLoader.y = 1;	// add offset for button border
 			this.backgroundLoader = new imageLoader(this.imageDir + '/' + this.buttonBackgroundURL);
-			this.iconLoader = new imageLoader(this.imageDir + '/' + imageURL);
 			this.backgroundLoader.x = this.backgroundLoader.y = 1;	// add offset for button border
+			this.iconLoader = new imageLoader(this.imageDir + '/' + iconURL);
 			this.iconLoader.x = this.iconLoader.y = 1;	// add offset for button border
+			
 			this.rawChildren.addChild(this.backgroundLoader);
 			this.rawChildren.addChild(this.iconLoader);
-			
-			this.actionText = action;
 			
 			// draw fake button
 			this.curLineStyle = this.grLineStyle1;
 			this.updateGraphics();
 			
+			this.addEventListener('selected', onSelected);
+			this.addEventListener('deSelected', onDeselected);
 			this.addEventListener(MouseEvent.CLICK, onClick);
 			this.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			this.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 		}
 		
@@ -95,10 +109,6 @@ package app.userInterface.game {
 		///-- Event Listeners --///
 		//
 		
-		private function onStageAdd(e:Event):void {
-			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
-		}
-		
 		private function onMouseOver(e:MouseEvent):void {
 			this.curLineStyle = this.grLineStyle2;
 			this.updateGraphics();
@@ -110,7 +120,32 @@ package app.userInterface.game {
 		}
 		
 		private function onClick(e:MouseEvent):void {
+			// tell target what to do
 			this.oGL.playerShip.oTarget.dispatchEvent(new dataEvent(this.actionText, 'doAction'));
+			
+			//this.dispatchEvent(new Event('selected'));
+			// tell parent to update the button highlighting
+			this.parent.dispatchEvent(new Event('actionButtonClick'));
+		}
+		
+		private function onSelected(e:Event):void {
+			if (this.rawChildren.contains(this.backgroundLoader)) {
+				this.rawChildren.removeChild(this.backgroundLoader);
+			}
+			
+			if (!this.rawChildren.contains(this.selBgLoader)) {
+				this.rawChildren.addChild(this.selBgLoader);
+			}
+		}
+		
+		private function onDeselected(e:Event):void {
+			if (this.rawChildren.contains(this.selBgLoader)) {
+				this.rawChildren.removeChild(this.selBgLoader);
+			}
+			
+			if (!this.rawChildren.contains(this.backgroundLoader)) {
+				this.rawChildren.addChild(this.backgroundLoader);
+			}
 		}
 		
 		//
@@ -119,6 +154,8 @@ package app.userInterface.game {
 		
 		private function destroy(e:Event):void {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
+			this.removeEventListener('selected', onSelected);
+			this.removeEventListener('deSelected', onDeselected);
 			this.removeEventListener(MouseEvent.CLICK, onClick);
 			this.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			this.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);

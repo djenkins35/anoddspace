@@ -204,7 +204,7 @@ package app.userInterface.game {
 			this.bottomMenu.removeEventListener(ItemClickEvent.ITEM_CLICK, bottomMenuHandler);
 			if (this.isDebug) {this.oDebug.destroy()};
 			this.oPlayerUI.destroy();
-			this.oPlayerTargetUI.destroy();
+			this.removeChild(this.oPlayerTargetUI);
 			this.dragBox.destroy();
 		}
 	}
