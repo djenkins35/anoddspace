@@ -29,6 +29,8 @@ package app.equipment {
 	import flash.net.URLRequest;
 	import flash.geom.*;
 	
+	import app.loaders.dataEvent;
+	
 	public class laser extends Sprite {
 		public var imageURL:String = "";
 		public var imageDir:String = "images/";
@@ -50,6 +52,10 @@ package app.equipment {
 		private var globalIt:Point = new Point();
 		private var oTarget:* = null;
 		
+		//
+		///-- Constructor --///
+		//
+		
 		public function laser(oParent:*, xSpec:XML):void {
 			this.name = xSpec.name;
 			this.imageURL = xSpec.imageURL;
@@ -63,6 +69,62 @@ package app.equipment {
 			this.oParent = oParent;
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 		}
+		
+		//
+		///-- Private Methods --///
+		//
+		
+		public function loadImages():void {
+			if (this.imageURL !== "") {
+				this.imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
+				this.imageLoader.load(new URLRequest(this.imageDir + this.imageURL));
+			}
+		}
+		
+		public function imageLoaded(e:Event):void {
+			this.offsetSprite.x = -this.imageLoader.width / 2;
+			this.offsetSprite.y = -this.imageLoader.height / 2;
+			this.offsetSprite.addChild(this.imageLoader.content);
+			this.addChild(this.offsetSprite);
+		}
+		
+		private function laserBeans():void {
+			if (this.oTarget.hasOwnProperty('hull')) {	// don't shoot asteroids
+				this.oParent.isHostile = true;
+				
+				var dist:Number = this.oParent.getDistance(this.oTarget.x - this.oParent.x, this.oTarget.y - this.oParent.y);
+				
+				// make sure our target isn't gone or out of range
+				if (this.oParent.oGL.objectArray.indexOf(this.oTarget) != -1) {
+					if (dist <= this.attackRange) {
+						var stopTime:int = this.delay + this.duration;
+						
+						if (this.tick >= this.delay && this.tick < stopTime) {
+							this.isLaser = true;
+							this.oParent.oGL.oGS.playSound("laserSound", "play");
+						} else if (this.tick >= stopTime) {
+							this.isLaser = false;
+							this.oParent.oGL.oGS.playSound("laserSound", "stop");
+							
+							// apply damage
+							this.oTarget.dispatchEvent(new dataEvent({ shield: this.damageShield, hull: this.damageHull}, 'applyDamage'));
+							this.tick = 0;
+						}
+					} else {
+						this.isLaser = false;
+						this.oParent.oGL.oGS.playSound("laserSound", "stop");
+					}
+				} else {
+					this.isLaser = false;
+					this.isActive = false;
+					this.oParent.oGL.oGS.playSound("laserSound", "stop");
+				}
+			}
+		}
+		
+		//
+		///-- Event listeners --///
+		//
 		
 		private function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
@@ -78,8 +140,6 @@ package app.equipment {
 			this.oParent.addEventListener('toggleModulesOn', toggleModulesOn);
 			this.oParent.addEventListener('toggleModulesOff', toggleModulesOff);
 		}
-		
-		///-- custom event listeners --///
 		
 		public function toggleModules(e:Event):void {
 			this.oTarget = this.oParent.oTarget;
@@ -100,79 +160,13 @@ package app.equipment {
 			this.isActive = false;
 		}
 		
-		///-- Images --///
-		
-		public function loadImages():void {
-			if (this.imageURL !== "") {
-				this.imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
-				this.imageLoader.load(new URLRequest(this.imageDir + this.imageURL));
-			}
-		}
-		
-		public function imageLoaded(e:Event):void {
-			this.offsetSprite.x = -this.imageLoader.width / 2;
-			this.offsetSprite.y = -this.imageLoader.height / 2;
-			this.offsetSprite.addChild(this.imageLoader.content);
-			this.addChild(this.offsetSprite);
-		}
-		
-		///-- Attacking --///
-		
-		private function laserBeans():void {
-			try { 	// don't attack asteroids...
-				this.oTarget.minerals == null;
-			} catch (e:Error) {
-				this.oParent.isHostile = true;
-			
-				var dist:Number = this.oParent.getDistance(this.oTarget.x - this.oParent.x, this.oTarget.y - this.oParent.y);
-				
-				// make sure our target isn't gone or out of range
-				if (this.oParent.oGL.objectArray.indexOf(this.oTarget) != -1) {
-					if (dist <= this.attackRange) {
-						var stopTime:int = this.delay + this.duration;
-					
-						if (this.tick >= this.delay && this.tick < stopTime) {
-							this.isLaser = true;
-							this.oParent.oGL.oGS.playSound("laserSound", "play");
-						} else if (this.tick >= stopTime) {
-							this.isLaser = false;
-							this.oParent.oGL.oGS.playSound("laserSound", "stop");
-							this.damageTarget();
-							this.tick = 0;
-						}
-					} else {
-						this.isLaser = false;
-						this.oParent.oGL.oGS.playSound("laserSound", "stop");
-					}
-				} else {
-					this.isLaser = false;
-					this.isActive = false;
-					this.oParent.oGL.oGS.playSound("laserSound", "stop");
-				}
-			}
-		}
-		
-		private function damageTarget():void {
-			this.oTarget.applyDamage(this.damageShield, this.damageHull);
-		}
-		
-		///-- --///
-		
-		public function destroy():void {
-			this.oParent.removeEventListener('toggleModules', toggleModules);
-			this.oParent.removeEventListener('toggleModulesOn', toggleModulesOn);
-			this.oParent.removeEventListener('toggleModulesOff', toggleModulesOff);
-			this.removeEventListener(Event.ENTER_FRAME, main);
-			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
-			this.graphics.clear();
-			this.parent.removeChild(this);
-		}
-		
-		///-- --///
+		//
+		///-- Main Loops --///
+		//
 		
 		public function heartBeat():void {
 			this.tick++;
-			this.graphics.clear();
+			//this.graphics.clear();
 			
 			if (this.oTarget != null && this.isActive) {
 				this.laserBeans();
@@ -192,6 +186,20 @@ package app.equipment {
 				this.graphics.moveTo(5,5);
 				this.graphics.lineTo(this.globalIt.x, this.globalIt.y);
 			}
+		}
+		
+		//
+		///-- Destructor --///
+		//
+		
+		public function destroy():void {
+			this.oParent.removeEventListener('toggleModules', toggleModules);
+			this.oParent.removeEventListener('toggleModulesOn', toggleModulesOn);
+			this.oParent.removeEventListener('toggleModulesOff', toggleModulesOff);
+			this.removeEventListener(Event.ENTER_FRAME, main);
+			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
+			this.graphics.clear();
+			this.parent.removeChild(this);
 		}
 	}
 }

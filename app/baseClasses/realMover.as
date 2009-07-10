@@ -37,7 +37,8 @@ package app.baseClasses {
 	import app.equipment.laser;
 	import app.loaders.gameloader;
 	import app.ai.artificialIgnorance;
-		
+	
+	
 	public class realMover extends mover {
 		public var notDead:Boolean = true;			// hack for heartbeat errors
 		public var trajectoryAngle:Number = 0;			// in radians
@@ -47,12 +48,7 @@ package app.baseClasses {
 		public var isThrust:Boolean = false;
 		public var AI:artificialIgnorance;
 		public var mods:moduleLoader;
-		
-		///-----------------
-		
 		public var droneBay:droneLoader;
-		
-		///-----------------
 		
 		// used if creating a ship from mapData in gameloader.as
 		public var defaultActions:Array = ["follow", "harvest asteroids", "defend", "patrol", "go postal"];
@@ -65,6 +61,10 @@ package app.baseClasses {
 		public var newXv:Number = 0; 	// new resultant components
 		public var newYv:Number = 0;
 		
+		//
+		///-- Constructor --///
+		//
+	
 		public function realMover(oGL:gameloader, xSpec:XML, xMapData:String = '') {	// under construction
 			this.oGL = oGL;
 			this.imageDir = this.oGL.imageDir;
@@ -96,12 +96,7 @@ package app.baseClasses {
 				this.x = position[0];
 				this.y = position[1];
 				this.mods = new moduleLoader(xSpec, this, xMapData);
-				
-				///---------------------
-				
 				this.droneBay = new droneLoader(this, xSpec);
-				
-				///---------------------
 				
 				var xName:* = XML(xMapData).name;	// boo, coercion error when casting to String 
 				this.faction = XML(xMapData).faction;
@@ -109,18 +104,12 @@ package app.baseClasses {
 			} else {														// active player ship
 				this.mods = new moduleLoader(xSpec, this);
 				this.loadCargo();
-				
-				///-----------------
-				
 				this.droneBay = new droneLoader(this, xSpec);
-				
-				///-----------------
-				
 				this.name = xSpec.name;
 			}
 			
-			// ai :P
 			this.AI = new artificialIgnorance(this);
+			this.addEventListener(Event.ENTER_FRAME, main);
 		}
 		
 		/*public override function doAction(s:String):void {
@@ -309,22 +298,9 @@ package app.baseClasses {
 			this.rotation += this.angularSpeed;
 		}
 		
-		///-- Destructor --///
-		
-		public override function destroy():void {
-			if (this.notDead) {
-				this.notDead = false;
-				this.AI.destroy();
-				this.removeEventListener(Event.ENTER_FRAME, main);
-				this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
-				this.thrustLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, thrustLoaded);
-				this.graphics.clear();
-				this.mods.destroy();
-				this.oGL.unloadObject(this);
-			}
-		}
-		
+		//
 		///-- Main Loops --///
+		//
 		
 		public function heartBeat():void {
 			if (this.notDead) {
@@ -345,7 +321,7 @@ package app.baseClasses {
 			}
 		}
 		
-		public override function main(e:Event):void {
+		public function main(e:Event):void {
 			if (this.AI.isChasing) {
 				this.AI.chase();
 			}
@@ -362,6 +338,23 @@ package app.baseClasses {
 			
 			this.x += this.newXv;
 			this.y += this.newYv;
+		}
+		
+		//
+		///-- Destructor --///
+		//
+		
+		public override function destroy():void {
+			if (this.notDead) {
+				this.notDead = false;
+				this.AI.destroy();
+				this.removeEventListener(Event.ENTER_FRAME, main);
+				this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
+				this.thrustLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, thrustLoaded);
+				this.graphics.clear();
+				this.mods.destroy();
+				this.oGL.unloadObject(this);
+			}
 		}
 	}
 }

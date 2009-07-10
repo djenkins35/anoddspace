@@ -70,13 +70,9 @@ package app.loaders {
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 		}
 		
-		private function onStageAdd(e:Event):void {
-			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
-			this.addEventListener(Event.ENTER_FRAME, main);
-			this.oPlayerData.load();
-		}
-		
+		//
 		///-- Callbacks & XML Loaders --///
+		//
 		
 		public function dataCallBack(s:String):void {
 			switch (s) {
@@ -192,9 +188,6 @@ package app.loaders {
 				}
 			}
 			
-			this.addEventListener('InvulnerabilityOn', toggleInvulnerability);
-			this.addEventListener('InvulnerabilityOff', toggleInvulnerability);
-			
 			this.pllx = new parallax(this);
 			this.pllx.focalPoint = this.playerShip;
 			this.gamescreen.addChildAt(this.pllx, 0);
@@ -262,15 +255,6 @@ package app.loaders {
 			this.destroy();
 		}
 		
-		///-- destructor --///
-		
-		public function destroy():void {
-			this.heartBeatTimer.removeEventListener(TimerEvent.TIMER, sendHeartBeat);
-			this.removeEventListener(Event.ENTER_FRAME, main);
-			this.removeEventListener('InvulnerabilityOn', toggleInvulnerability);
-			this.removeEventListener('InvulnerabilityOff', toggleInvulnerability);
-			this.dispatchEvent(new Event('gameClosed'));
-		}
 		
 		///-- Player Ship Functions --///
 		
@@ -337,11 +321,19 @@ package app.loaders {
 			this.updateCargo();
 		}
 		
-		private function toggleInvulnerability(e:Event):void {
-			e.type == 'InvulnerabilityOn' ? this.playerShip.isGodMode = true : this.playerShip.isGodMode = false;
+		//
+		///-- Event Listeners --///
+		//
+		
+		private function onStageAdd(e:Event):void {
+			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
+			this.addEventListener(Event.ENTER_FRAME, main);
+			this.oPlayerData.load();
 		}
 		
+		//
 		///-- Main Loops --///
+		//
 		
 		private function getTargetDistance(dx:Number, dy:Number):Number {	// used in heartbeat loop
 			var maxRange:Number = this.playerShip.radarRange;						// throw out anything that is definitely out of range
@@ -390,7 +382,8 @@ package app.loaders {
 				}
 			
 				if (this.usrInpt.tKeyPressed) {
-					this.playerShip.cycleTargets();
+					//this.playerShip.cycleTargets();
+					this.playerShip.dispatchEvent(new Event('cycleTargets'));
 					this.usrInpt.tKeyPressed = false;
 				}
 				
@@ -404,6 +397,16 @@ package app.loaders {
 					this.usrInpt.spacePressed = false;
 				}
 			}
+		}
+	
+		//
+		///-- destructor --///
+		//
+		
+		public function destroy():void {
+			this.heartBeatTimer.removeEventListener(TimerEvent.TIMER, sendHeartBeat);
+			this.removeEventListener(Event.ENTER_FRAME, main);
+			this.dispatchEvent(new Event('gameClosed'));
 		}
 	}
 }

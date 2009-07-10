@@ -58,8 +58,8 @@ package app.baseClasses {
 		public var indx:int = -1;					// index in oGL.objectArray
 		public var isGodMode:Boolean = false;
 		
-		public var selectBox:Shape = new Shape();
-		public var indicator:Shape = new Shape();
+		public var tempOverlay:Shape = new Shape();	// overlay when drag-selecting
+		public var mainOverlay:Shape = new Shape();	// overlay when selected
 		public var grLineStyle:Array = [1, 0xFFFF00];
 		public var grLineStyle2:Array = [1, 0x00FFFF];
 		///-- --///
@@ -79,6 +79,15 @@ package app.baseClasses {
 		
 		public function targeter():void {
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
+			this.addEventListener(MouseEvent.CLICK, clickHandler);
+			this.addEventListener('boxSelected', handleBoxSelect);
+			this.addEventListener('boxDeSelected', handleBoxSelect);
+			this.addEventListener('toggleSelectOn', handleTempSelect);
+			this.addEventListener('toggleSelectOff', handleTempSelect);
+			this.addEventListener('cycleTargets', cycleTargets);
+			this.addEventListener('InvulnerabilityOn', toggleInvulnerability);
+			this.addEventListener('InvulnerabilityOff', toggleInvulnerability);
+			this.addEventListener('applyDamage', applyDamage);
 		}
 		
 		public function loadImages():void {
@@ -87,10 +96,6 @@ package app.baseClasses {
 				this.imageLoader.load(new URLRequest(this.imageDir + "/" + this.imageURL));
 			}
 		}
-		
-		//public function doAction(s:String):void {}	// overridden by most subclasses
-		
-		public function attack():void {}			// overridden by most subclasses
 		
 		public function targetClosestEnemy():Boolean {
 			var closest:* = null;
@@ -118,87 +123,6 @@ package app.baseClasses {
 			} else {
 				trace(this.name + " says, no targets in range");
 				return false;
-			}
-		}
-		
-		public function cycleTargets():void {		// this is pretty ugly
-			if (this.oTarget != null) {
-				var targetIndex:int = this.oTarget.indx;
-				
-				if (targetIndex + 1 != this.indx) {								// make sure not to target self
-					if (targetIndex + 1 < this.oGL.objectArray.length) {
-						this.oTarget = this.oGL.objectArray[targetIndex + 1];
-					} else {													// loop around
-						if (this.indx != 0) {									// make sure not to target self
-							this.oTarget = this.oGL.objectArray[0];
-						} else {
-							try {
-								this.oTarget = this.oGL.objectArray[1];
-							} catch (e:Error) {
-								trace("no more objects in this.oGL.objectArray to cycle through");
-							}
-						}
-					}
-				} else {														// go to next index
-					if (targetIndex + 2 < this.oGL.objectArray.length) {
-						this.oTarget = this.oGL.objectArray[targetIndex + 2];
-					} else {													// loop around
-						if (this.indx != 0) {									// make sure not to target self
-							this.oTarget = this.oGL.objectArray[0];
-						} else {
-							try {
-								this.oTarget = this.oGL.objectArray[1];
-							} catch (e:Error) {
-								trace("no more objects in this.oGL.objectArray to cycle through");
-							}
-						}
-					}
-				}
-			} else {
-				if (this.indx != 0) {											// make sure not to target self
-					this.oTarget = this.oGL.objectArray[0];
-				} else {
-					try {
-						this.oTarget = this.oGL.objectArray[1];
-					} catch (e:Error) {
-						trace("no more objects in this.oGL.objectArray to cycle through");
-					}
-				}
-			}
-		}
-				
-		public function applyDamage(damageShield:Number, damageHull:Number):void {	// needs work
-			if (!this.isHostile) {						// if not already attacking, aquire closest enemy
-				this.isHostile = true;
-				this.targetClosestEnemy();
-			}
-			
-			if (this.shield > 0) {
-				if (this.shield - damageShield < 0) {	// carry over damage to hull
-					this.shield = 0;
-					
-					if (!this.isGodMode) {
-						this.hull -= damageHull;
-					}
-				} else {
-					this.shield -= damageShield;
-				}
-			} else {
-				if (!this.isGodMode) {
-					this.hull -= damageHull;
-				}
-			} 
-			
-			if (this.hull <= 0) {
-				this.destroy();
-			}
-		}
-		
-		public function toggleGodMode():void {
-			if (this.isGodMode) {
-				this.isGodMode = false;
-			} else {
-				this.isGodMode = true;
 			}
 		}
 		
@@ -251,34 +175,23 @@ package app.baseClasses {
 		
 		public function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
-			this.addEventListener(MouseEvent.CLICK, clickHandler);
-			this.addEventListener(Event.ENTER_FRAME, main);
 			this.loadImages();
-			
-			this.addEventListener('boxSelected', handleBoxSelect);
-			this.addEventListener('boxDeSelected', handleBoxSelect);
-			this.addEventListener('toggleSelectOn', handleTempSelect);
-			this.addEventListener('toggleSelectOff', handleTempSelect);
-		}
-		
-		public function clickHandler(e:MouseEvent):void {
-			this.oGL.playerShip.oTarget = this;
-			this.dispatchEvent(new Event('boxSelected'));
 		}
 		
 		public function imageLoaded(e:Event):void {
 			// draw and cache the select boxes
-			this.selectBox.graphics.lineStyle(this.grLineStyle[0], this.grLineStyle[1]);
-			this.selectBox.graphics.drawRect(-10, -10, this.imageLoader.width + 20, this.imageLoader.height + 20);
-			this.selectBox.cacheAsBitmap = true;
+			this.tempOverlay.graphics.lineStyle(this.grLineStyle[0], this.grLineStyle[1]);
+			this.tempOverlay.graphics.drawRect(-10, -10, this.imageLoader.width + 20, this.imageLoader.height + 20);
+			this.tempOverlay.cacheAsBitmap = true;
+			
 			
 			// little triangle
-			this.indicator.graphics.lineStyle(this.grLineStyle2[0], this.grLineStyle2[1]);
-			this.indicator.graphics.moveTo(this.imageLoader.width / 2 - 10, -10);
-			this.indicator.graphics.lineTo(this.imageLoader.width / 2 + 10, -10);
-			this.indicator.graphics.lineTo(this.imageLoader.width / 2, -20);
-			this.indicator.graphics.lineTo(this.imageLoader.width / 2 - 10, -10);
-			this.indicator.cacheAsBitmap = true;
+			this.mainOverlay.graphics.lineStyle(this.grLineStyle2[0], this.grLineStyle2[1]);
+			this.mainOverlay.graphics.moveTo(this.imageLoader.width / 2 - 10, -10);
+			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2 + 10, -10);
+			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2, -20);
+			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2 - 10, -10);
+			this.mainOverlay.cacheAsBitmap = true;
 			
 			this.offsetSprite.x = -this.imageLoader.width / 2;
 			this.offsetSprite.y = -this.imageLoader.height / 2;
@@ -286,31 +199,114 @@ package app.baseClasses {
 			this.addChild(this.offsetSprite);
 		}
 		
-		private function handleBoxSelect(e:Event):void {
+		public function clickHandler(e:MouseEvent):void {
+			this.oGL.playerShip.oTarget = this;
+			this.dispatchEvent(new Event('boxSelected'));
+		}
+		
+		private function handleBoxSelect(e:Event):void {	// show or hide the main overlay
 			if (e.type == 'boxSelected') {
-				// add indicator
-				if (!this.offsetSprite.contains(this.indicator)) {
-					this.offsetSprite.addChild(this.indicator);
+				// add mainOverlay
+				if (!this.offsetSprite.contains(this.mainOverlay)) {
+					this.offsetSprite.addChild(this.mainOverlay);
 				}
 			} else {
-				if (this.offsetSprite.contains(this.indicator)) {
-					this.offsetSprite.removeChild(this.indicator);
+				if (this.offsetSprite.contains(this.mainOverlay)) {
+					this.offsetSprite.removeChild(this.mainOverlay);
 				}
 			}
 		}
 		
-		private function handleTempSelect(e:Event):void {
+		private function handleTempSelect(e:Event):void {	// show or hide the temporary overlay
 			if (e.type == 'toggleSelectOn') {
-				this.offsetSprite.addChild(this.selectBox);
+				this.offsetSprite.addChild(this.tempOverlay);
 			} else {
-				if (this.offsetSprite.contains(this.selectBox)) {
-					this.offsetSprite.removeChild(this.selectBox);
+				if (this.offsetSprite.contains(this.tempOverlay)) {
+					this.offsetSprite.removeChild(this.tempOverlay);
+				}
+			}
+		}
+		
+		private function applyDamage(e:dataEvent):void {
+			// if not already attacking, aquire closest enemy
+			if (!this.isHostile) {
+				this.isHostile = true;
+				this.targetClosestEnemy();
+			}
+			
+			if (this.shield > 0) {
+				if (this.shield - e.dataObj.shield < 0) {	// damage can't all be absorbed by shield
+					this.shield = 0;
+					
+					if (!this.isGodMode) {
+						this.hull -= e.dataObj.hull;
+					}
+				} else {
+					this.shield -= e.dataObj.shield;
+				}
+			} else {
+				if (!this.isGodMode) {
+					this.hull -= e.dataObj.hull;
+				}
+			} 
+			
+			if (this.hull <= 0) {
+				this.destroy();
+			}
+		}
+		
+		private function toggleInvulnerability(e:Event):void {
+			e.type == 'InvulnerabilityOn' ? this.isGodMode = true : this.isGodMode = false;
+		}
+		
+		private function cycleTargets(e:Event):void {		// this is pretty ugly
+			if (this.oTarget != null) {
+				var targetIndex:int = this.oTarget.indx;
+				
+				if (targetIndex + 1 != this.indx) {								// make sure not to target self
+					if (targetIndex + 1 < this.oGL.objectArray.length) {
+						this.oTarget = this.oGL.objectArray[targetIndex + 1];
+					} else {													// loop around
+						if (this.indx != 0) {									// make sure not to target self
+							this.oTarget = this.oGL.objectArray[0];
+						} else {
+							try {
+								this.oTarget = this.oGL.objectArray[1];
+							} catch (e:Error) {
+								trace("no more objects in this.oGL.objectArray to cycle through");
+							}
+						}
+					}
+				} else {														// go to next index
+					if (targetIndex + 2 < this.oGL.objectArray.length) {
+						this.oTarget = this.oGL.objectArray[targetIndex + 2];
+					} else {													// loop around
+						if (this.indx != 0) {									// make sure not to target self
+							this.oTarget = this.oGL.objectArray[0];
+						} else {
+							try {
+								this.oTarget = this.oGL.objectArray[1];
+							} catch (e:Error) {
+								trace("no more objects in this.oGL.objectArray to cycle through");
+							}
+						}
+					}
+				}
+			} else {
+				if (this.indx != 0) {											// make sure not to target self
+					this.oTarget = this.oGL.objectArray[0];
+				} else {
+					try {
+						this.oTarget = this.oGL.objectArray[1];
+					} catch (e:Error) {
+						trace("no more objects in this.oGL.objectArray to cycle through");
+					}
 				}
 			}
 		}
 		
 		//
-		///-- destructor --///
+		///-- Destructor --///
 		//
 		
 		public function destroy():void {	// overridden by most subclasses
@@ -318,17 +314,14 @@ package app.baseClasses {
 			this.removeEventListener('boxDeSelected', handleBoxSelect);
 			this.removeEventListener('toggleSelectOn', handleTempSelect);
 			this.removeEventListener('toggleSelectOff', handleTempSelect);
+			this.removeEventListener('cycleTargets', cycleTargets);
+			this.removeEventListener('InvulnerabilityOn', toggleInvulnerability);
+			this.removeEventListener('InvulnerabilityOff', toggleInvulnerability);
+			this.removeEventListener('applyDamage', applyDamage);
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
-			this.removeEventListener(Event.ENTER_FRAME, main);
 			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
 			this.imageLoader = null;
 			this.oGL.unloadObject(this);
-		}
-		
-		///-- main loop --///
-		
-		public function main(e:Event):void {	// overridden by most subclasses
-		
 		}
 	}
 }

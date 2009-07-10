@@ -52,8 +52,6 @@ package app.baseClasses {
 		public var isDockable:Boolean = false;
 		public var oTarget:Object = null; // hack
 		public var isHostile:Boolean = false; // hack
-		public var hull:Number = 20; // hack
-		public var shield:Number = 0;
 		public var minerals:int;		// amount that can be mined
 		public var faction:String = "asteroid";
 		
@@ -78,20 +76,6 @@ package app.baseClasses {
 			if (this.imageURL != "") {
 				this.imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
 				this.imageLoader.load(new URLRequest(this.imageDir + "/" + this.imageURL));
-			}
-		}
-		
-		private function delayedDestruct():void {	// needed because we have to return a value from the function that would other wise call this.destroy()
-			if (this.isDestruct) {
-				this.tick++;
-				
-				if (this.tick > this.waitTime) {
-					this.tick = 0;
-				}
-				
-				if (this.tick == this.waitTime) {
-					this.destroy();
-				}
 			}
 		}
 		
@@ -140,7 +124,13 @@ package app.baseClasses {
 		
 		public function heartBeat():void {
 			if (this.isDestruct) {
-				this.delayedDestruct();
+				this.tick++;
+				
+				if (this.tick == this.waitTime) {
+					this.destroy();
+				} else if (this.tick > this.waitTime) {
+					this.tick = 0;
+				}
 			}
 		}
 	}

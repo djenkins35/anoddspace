@@ -36,6 +36,8 @@
 		
 		body { background-color: #333333; }
 		
+		.strike {text-decoration: line-through;}
+		
 		#todo {
 			color: #e5e5e5;
 			font-size: 0.75em;
@@ -69,7 +71,7 @@
 		<p>Game:</p>
 		
 		<ul>
-			<li>replace target action combobox with action buttons</li>
+			<li class="strike">replace target action combobox with action buttons</li>
 			<li>work on drag-select targeting</li>
 			<li>add fleet / selection interface</li>
 			<li>replace ship target hull / shield with progress bars</li>
@@ -94,6 +96,14 @@
 		
 		<ul>
 			<li>fix 'credits' string in preloader (load external file)</li>
+		</ul>
+		
+		<p>Code Cleaning:</p>
+		
+		<ul>
+			<li>loaders/userInput.as needs serious work (the 'isPressed' stuff needs to go for stuff that isn't movement related)</li>
+			<li>^ loader/gameloader.as::main() needs to be fixed along with this</li>
+			<li>Remove the 'dataCallBack' funciton in gameloader.as</li>
 		</ul>
 	</div>
 	

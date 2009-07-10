@@ -563,7 +563,7 @@ package app.ai {
 		}
 		
 		private function onDoActionEvent(e:dataEvent):void {
-			this.doAction(e.dataObj);
+            this.doAction(e.dataObj);
 		}
 		
 		///-- destructor --///

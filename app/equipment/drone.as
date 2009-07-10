@@ -55,6 +55,7 @@ package app.equipment {
 			this.imageURL = xData.imageURL;
 			this.name = xData.name;
 			this.loadModule(xData.module);
+			this.addEventListener(Event.ENTER_FRAME, main);
 		}
 		
 		private function loadModule(module:String):void {
@@ -85,26 +86,9 @@ package app.equipment {
 			this.isMoving = true;
 		}
 		
-		///-- destructor --///
-		
-		public override function destroy():void {
-			try {
-				if (this.hanger.fighterArray != null) {
-					this.hanger.fighterArray.splice(this.hanger.fighterArray.indexOf(this), 1);
-					this.hanger.fighterCounter--;
-				}
-			} catch (e:Error) {
-				trace(this.name + " was not launched from a fighterHanger");
-			}
-			
-			this.removeEventListener(Event.ENTER_FRAME, main);
-			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
-			this.graphics.clear();
-			this.oModule.destroy();
-			this.oGL.unloadObject(this);
-		}
-		
+		//
 		///-- main loops --///
+		//
 		
 		public function heartBeat():void {
 			this.oModule.heartBeat();
@@ -128,10 +112,31 @@ package app.equipment {
 			this.rotation = this.trajectory * 180 / Math.PI;
 		}
 		
-		public override function main(e:Event):void {
+		public function main(e:Event):void {
 			if (this.isMoving) {
 				this.translatePoint(this.trajectory, this.velocity);
 			}
+		}
+		
+		//
+		///-- destructor --///
+		//
+		
+		public override function destroy():void {
+			try {
+				if (this.hanger.fighterArray != null) {
+					this.hanger.fighterArray.splice(this.hanger.fighterArray.indexOf(this), 1);
+					this.hanger.fighterCounter--;
+				}
+			} catch (e:Error) {
+				trace(this.name + " was not launched from a fighterHanger");
+			}
+			
+			this.removeEventListener(Event.ENTER_FRAME, main);
+			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
+			this.graphics.clear();
+			this.oModule.destroy();
+			this.oGL.unloadObject(this);
 		}
 	}
 }

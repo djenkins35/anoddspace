@@ -121,7 +121,7 @@ package app.userInterface.game {
 		private function checkOptions(e:MouseEvent):void {
 			switch (e.target.label) {
 				case "Invulnerability":
-					e.target.selected ? this.oGL.dispatchEvent(new Event('InvulnerabilityOn')) : this.oGL.dispatchEvent(new Event('InvulnerabilityOff'));
+					e.target.selected ? this.oGL.playerShip.dispatchEvent(new Event('InvulnerabilityOn')) : this.oGL.playerShip.dispatchEvent(new Event('InvulnerabilityOff'));
 					break;
 					
 				case "Debug Window":

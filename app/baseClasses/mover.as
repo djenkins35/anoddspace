@@ -70,7 +70,7 @@ package app.baseClasses {
 			this.thrustOffset.addChild(this.thrustLoader.content);
 		}
 		
-		public override function attack():void {
+		public function attack():void {
 			if (this.targetDistance > this.attackRange) {
 				this.chase();
 				this.isZig = false;
@@ -101,7 +101,7 @@ package app.baseClasses {
 		}
 		
 		public function chase():void {
-			this.getAngleToTarget();
+			super.getAngleToTarget();
 			
 			if (this.targetAngle >= 0 && this.targetAngle <= Math.PI) {
 				if (this.targetAngle + this.acceleration < this.targetAngle) {
@@ -155,7 +155,6 @@ package app.baseClasses {
 		
 		public override function destroy():void {
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
-			this.removeEventListener(Event.ENTER_FRAME, main);
 			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
 			this.imageLoader = null;
 			this.thrustLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, thrustLoaded);

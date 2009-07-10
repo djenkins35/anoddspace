@@ -87,7 +87,6 @@ package app.baseClasses {
 		}
 		
 		public override function destroy():void {
-			this.removeEventListener(Event.ENTER_FRAME, main);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
 			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
@@ -98,23 +97,21 @@ package app.baseClasses {
 		///-- --///
 		
 		public function heartBeat():void {
-			//try {
-				if (this.isHostile) {
-					this.getDistanceToTarget();
-				
-					if (this.targetDistance <= this.radarRange) {
-						this.tick++;
-						if (this.tick == this.launchDelay) {
-							this.launchFighters();
-							this.tick = 0;
-						} else if (this.tick > this.launchDelay) {
-							this.tick = 0;
-						}
-					} else {
+			if (this.isHostile) {
+				this.getDistanceToTarget();
+			
+				if (this.targetDistance <= this.radarRange) {
+					this.tick++;
+					if (this.tick == this.launchDelay) {
+						this.launchFighters();
+						this.tick = 0;
+					} else if (this.tick > this.launchDelay) {
 						this.tick = 0;
 					}
+				} else {
+					this.tick = 0;
 				}
-			//} catch (e:Error) {}
+			}
 		}
 	}
 }

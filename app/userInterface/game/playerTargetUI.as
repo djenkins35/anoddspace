@@ -103,11 +103,11 @@ package app.userInterface.game {
 					// add the actionbar to the display list and add the button listener for selecting the highlighted button
 					this.addChild(this.actionBar);
 					this.actionBar.addEventListener('actionButtonClick', onActionButtonClick);
-				} else if (this.contains(this.actionBar)) {
+				} else if (this.actionBar != null && this.contains(this.actionBar)) {
 					this.removeChild(this.actionBar);
 				}
 			} else {
-				if (this.contains(this.actionBar)) {
+				if (this.actionBar != null && this.contains(this.actionBar)) {
 					this.removeChild(this.actionBar);
 				}
 			}
