@@ -98,8 +98,8 @@ package app.baseClasses {
 		
 		public function heartBeat():void {
 			if (this.isHostile) {
-				this.getDistanceToTarget();
-			
+				this.targetDistance = this.getDistance(this.oTarget, this);
+				
 				if (this.targetDistance <= this.radarRange) {
 					this.tick++;
 					if (this.tick == this.launchDelay) {

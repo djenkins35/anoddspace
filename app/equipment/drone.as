@@ -91,10 +91,8 @@ package app.equipment {
 		//
 		
 		public function heartBeat():void {
-			this.oModule.heartBeat();
-		
 			if (this.oGL.objectArray.indexOf(this.oTarget) != -1) {		// target not destroyed
-				this.getDistanceToTarget();
+				this.targetDistance = this.getDistance(this.oTarget, this);
 				
 				if (this.targetDistance <= this.radarRange) {
 					this.isMoving = true;
@@ -110,6 +108,7 @@ package app.equipment {
 			}
 			
 			this.rotation = this.trajectory * 180 / Math.PI;
+			this.oModule.heartBeat();
 		}
 		
 		public function main(e:Event):void {

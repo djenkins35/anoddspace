@@ -98,8 +98,9 @@ package app.baseClasses {
 		}
 		
 		public function targetClosestEnemy():Boolean {
-			var closest:* = null;
-			var dist:Number = this.radarRange;
+			var closest:Object = null;
+			var objDistance:Number;
+			var tempDistance:Number = this.radarRange;	// overwritten by each distance that is closer
 			
 			// find something to shoot
 			for (var i:uint = 0, len:uint = this.oGL.objectArray.length; i < len; i++) {
@@ -107,18 +108,18 @@ package app.baseClasses {
 					&& this.oGL.objectArray[i].faction != "asteroid") 
 				{
 					// get what's closest
-					var targetDist:Number = this.getDistance(this.oGL.objectArray[i].x - this.x, this.oGL.objectArray[i].y - this.y);
+					objDistance = this.getDistance(this.oGL.objectArray[i], this);
 					
-					if (targetDist < dist) {
+					if (objDistance < tempDistance) {
 						closest = this.oGL.objectArray[i];
-						dist = targetDist;
+						tempDistance = objDistance;
 					}
 				}
 			}
 			
 			if (closest != null) {
 				this.oTarget = closest;
-				this.targetDistance = dist;
+				this.targetDistance = tempDistance;
 				return true;
 			} else {
 				trace(this.name + " says, no targets in range");
@@ -126,15 +127,9 @@ package app.baseClasses {
 			}
 		}
 		
-		// need to fix these at some point, first one is less useful
-		
-		public function getDistanceToTarget():void {
-			var dx:Number = Math.abs(this.x - this.oTarget.x);
-			var dy:Number = Math.abs(this.y - this.oTarget.y);
-			this.targetDistance = Math.sqrt(dx * dx + dy * dy);
-		}
-		
-		public function getDistance(dx:Number, dy:Number):Number {
+		public function getDistance(obj1:Object, obj2:Object):Number {
+			var dx:Number = Math.abs(obj1.x - obj2.x);
+			var dy:Number = Math.abs(obj1.y - obj2.y);
 			return Math.sqrt(dx * dx + dy * dy);
 		}
 		

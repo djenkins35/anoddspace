@@ -51,9 +51,9 @@ package app.equipment {
 		private var globalIt:Point = new Point();
 		private var oTarget:* = null;
 		
-		private var reticule:Sprite = new Sprite();
-		
+		//
 		///-- Constructor --///
+		//
 		
 		public function miningLaser(oParent:*, xSpec:XML):void {
 			this.name = xSpec.name;
@@ -65,35 +65,27 @@ package app.equipment {
 			this.grLineStyle = xSpec.grLineStyle.split(',');
 			this.oParent = oParent;
 			
-			// testing
-			this.oParent.oGL.gamescreen.addChild(this.reticule);
-			
-			// hack for now
-			/*this.offsetSprite.graphics.lineStyle(1, 0x000000);
-			this.offsetSprite.graphics.beginFill(0xFFFFFF);
-			this.offsetSprite.graphics.drawEllipse(0, 0, 10, 10);
-			this.offsetSprite.graphics.endFill();
-			this.addChild(this.offsetSprite);*/
-			
 			this.addEventListener(Event.ENTER_FRAME, main);
-			// custom event listener triggered by ai or userInput
 			this.oParent.addEventListener('toggleModules', toggleModules);
 			this.oParent.addEventListener('toggleModulesOn', toggleModulesOn);
 			this.oParent.addEventListener('toggleModulesOff', toggleModulesOff);
 		}
 		
-		///-- Images --///
+		//
+		///-- Private Functions --///
 		
-		public function loadImages():void {
+		private function loadImages():void {
 			if (this.imageURL !== "") {
 				this.imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
 				this.imageLoader.load(new URLRequest(this.imageDir + this.imageURL));
 			}
 		}
 		
+		//
 		///-- Event listeners --///
+		//
 		
-		public function imageLoaded(e:Event):void {
+		private function imageLoaded(e:Event):void {
 			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
 			this.offsetSprite.x = -this.imageLoader.width / 2;
 			this.offsetSprite.y = -this.imageLoader.height / 2;
@@ -101,7 +93,7 @@ package app.equipment {
 			this.addChild(this.offsetSprite);
 		}
 		
-		public function toggleModules(e:Event):void {
+		private function toggleModules(e:Event):void {
 			this.oTarget = this.oParent.oTarget;
 			
 			if (this.isActive == false) {
@@ -111,23 +103,21 @@ package app.equipment {
 			}
 		}
 		
-		public function toggleModulesOn(e:Event):void {
+		private function toggleModulesOn(e:Event):void {
 			this.oTarget = this.oParent.oTarget;
 			this.isActive = true;
 		}
 		
-		public function toggleModulesOff(e:Event):void {
+		private function toggleModulesOff(e:Event):void {
 			this.isActive = false;
 		}
-		
-		///-- Mining --///
 		
 		private function mineTarget():void {
 			// check for cargo space first
 			if (this.oParent.usedCargoSpace + this.miningAmount <= this.oParent.cargoCapacity) {
 			
 				// need to check that module's target is in range, not parent's target
-				var dist:Number = this.oParent.getDistance(this.oTarget.x - this.oParent.x, this.oTarget.y - this.oParent.y);
+				var dist:Number = this.oParent.getDistance(this.oTarget, this.oParent);
 				
 				if (this.oTarget is asteroid && dist <= this.miningRange) {
 					var stopTime:int = this.delay + this.duration;
@@ -157,18 +147,9 @@ package app.equipment {
 			}
 		}
 		
-		///-- --///
-		
-		public function destroy():void {
-			this.removeEventListener(Event.ENTER_FRAME, main);
-			this.oParent.removeEventListener('toggleModules', toggleModules);
-			this.oParent.removeEventListener('toggleModulesOn', toggleModulesOn);
-			this.oParent.removeEventListener('toggleModulesOff', toggleModulesOff);
-			this.graphics.clear();
-			this.parent.removeChild(this);
-		}
-		
-		///-- --///
+		//
+		///-- Main Loops --///
+		//
 		
 		public function heartBeat():void {
 			this.tick++;
@@ -181,7 +162,7 @@ package app.equipment {
 			}
 		}
 		
-		public function main(e:Event):void {
+		private function main(e:Event):void {
 			this.graphics.clear();
 			
 			if (this.isLaser == true) {
@@ -192,6 +173,18 @@ package app.equipment {
 				this.graphics.moveTo(5,5);
 				this.graphics.lineTo(this.globalIt.x, this.globalIt.y);
 			}
+		}
+		
+		//
+		///-- Destructor --///
+		//
+		
+		public function destroy():void {
+			this.removeEventListener(Event.ENTER_FRAME, main);
+			this.oParent.removeEventListener('toggleModules', toggleModules);
+			this.oParent.removeEventListener('toggleModulesOn', toggleModulesOn);
+			this.oParent.removeEventListener('toggleModulesOff', toggleModulesOff);
+			this.parent.removeChild(this);
 		}
 	}
 }

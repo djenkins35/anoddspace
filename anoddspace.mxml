@@ -31,7 +31,7 @@ THE SOFTWARE.
     
 	paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0"
     width="800" height="600"
-	frameRate="35"
+	frameRate="36"
  >
  
 	<mx:Style source="SunNight.css"/>

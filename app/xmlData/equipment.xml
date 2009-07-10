@@ -34,7 +34,7 @@
 			
 			<damageShield>5</damageShield>
 			<damageHull>1</damageHull>
-			<delay>4</delay>
+			<delay>8</delay>
 			<duration>1</duration>
 			<attackRange>400</attackRange>
 			<grLineStyle>2,0xAA0022,0.6</grLineStyle>

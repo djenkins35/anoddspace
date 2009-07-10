@@ -43,6 +43,7 @@ package app.equipment {
 		public var damageHull:Number;
 		public var delay:int;
 		public var duration:int;
+		private var stopTime:int;	// delay + duration
 		public var attackRange:uint;
 		public var grLineStyle:Array;
 		public var oParent:* = null;
@@ -63,6 +64,7 @@ package app.equipment {
 			this.damageHull = xSpec.damageHull;
 			this.delay = xSpec.delay;
 			this.duration = xSpec.duration;
+			this.stopTime = this.delay + this.duration;
 			this.attackRange = xSpec.attackRange;
 			this.grLineStyle = xSpec.grLineStyle.split(',');
 		
@@ -74,14 +76,14 @@ package app.equipment {
 		///-- Private Methods --///
 		//
 		
-		public function loadImages():void {
+		private function loadImages():void {
 			if (this.imageURL !== "") {
 				this.imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
 				this.imageLoader.load(new URLRequest(this.imageDir + this.imageURL));
 			}
 		}
 		
-		public function imageLoaded(e:Event):void {
+		private function imageLoaded(e:Event):void {
 			this.offsetSprite.x = -this.imageLoader.width / 2;
 			this.offsetSprite.y = -this.imageLoader.height / 2;
 			this.offsetSprite.addChild(this.imageLoader.content);
@@ -92,32 +94,35 @@ package app.equipment {
 			if (this.oTarget.hasOwnProperty('hull')) {	// don't shoot asteroids
 				this.oParent.isHostile = true;
 				
-				var dist:Number = this.oParent.getDistance(this.oTarget.x - this.oParent.x, this.oTarget.y - this.oParent.y);
+				var dist:Number = this.oParent.getDistance(this.oTarget, this.oParent);
 				
 				// make sure our target isn't gone or out of range
 				if (this.oParent.oGL.objectArray.indexOf(this.oTarget) != -1) {
 					if (dist <= this.attackRange) {
-						var stopTime:int = this.delay + this.duration;
 						
-						if (this.tick >= this.delay && this.tick < stopTime) {
+						
+						
+						if (this.tick >= this.delay && this.tick < this.stopTime) {
+							
 							this.isLaser = true;
-							this.oParent.oGL.oGS.playSound("laserSound", "play");
-						} else if (this.tick >= stopTime) {
+							
+						} else if (this.tick == this.stopTime) {
+							
 							this.isLaser = false;
-							this.oParent.oGL.oGS.playSound("laserSound", "stop");
 							
 							// apply damage
 							this.oTarget.dispatchEvent(new dataEvent({ shield: this.damageShield, hull: this.damageHull}, 'applyDamage'));
-							this.tick = 0;
 						}
+						
+						
+						
+						
 					} else {
 						this.isLaser = false;
-						this.oParent.oGL.oGS.playSound("laserSound", "stop");
 					}
 				} else {
 					this.isLaser = false;
 					this.isActive = false;
-					this.oParent.oGL.oGS.playSound("laserSound", "stop");
 				}
 			}
 		}
@@ -141,7 +146,7 @@ package app.equipment {
 			this.oParent.addEventListener('toggleModulesOff', toggleModulesOff);
 		}
 		
-		public function toggleModules(e:Event):void {
+		private function toggleModules(e:Event):void {
 			this.oTarget = this.oParent.oTarget;
 			
 			if (this.isActive == false) {
@@ -151,12 +156,12 @@ package app.equipment {
 			}
 		}
 		
-		public function toggleModulesOn(e:Event):void {
+		private function toggleModulesOn(e:Event):void {
 			this.oTarget = this.oParent.oTarget;
 			this.isActive = true;
 		}
 		
-		public function toggleModulesOff(e:Event):void {
+		private function toggleModulesOff(e:Event):void {
 			this.isActive = false;
 		}
 		
@@ -169,13 +174,14 @@ package app.equipment {
 			//this.graphics.clear();
 			
 			if (this.oTarget != null && this.isActive) {
+				if (this.tick > this.stopTime) { this.tick = 0 };	// reset counter if out of bounds
 				this.laserBeans();
 			} else {
 				this.isLaser = false;
 			}
 		}
 		
-		public function main(e:Event):void {
+		private function main(e:Event):void {
 			this.graphics.clear();
 			
 			if (this.isLaser == true) {

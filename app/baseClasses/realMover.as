@@ -112,10 +112,6 @@ package app.baseClasses {
 			this.addEventListener(Event.ENTER_FRAME, main);
 		}
 		
-		/*public override function doAction(s:String):void {
-			this.AI.doAction(s);
-		}*/
-		
 		public function toggleModules():void {	// called in gameloader.as::main() on 'space' key event
 			this.dispatchEvent(new Event('toggleModules'));
 		}
@@ -308,7 +304,7 @@ package app.baseClasses {
 				this.droneBay.heartBeat();
 				
 				if (this.oTarget != null) {
-					this.getDistanceToTarget();
+					this.targetDistance = this.getDistance(this.oTarget, this);
 					
 					if (this.AI.isChasing) {
 						this.getAngleToTarget();

@@ -127,8 +127,8 @@ package app.ai {
 				
 				if (closest != null) {
 					this.oParent.oTarget = closest;
-					this.oParent.getDistanceToTarget();
-					
+					this.oParent.targetDistance = this.oParent.getDistance(this.oParent.oTarget, this.oParent);
+                    
 					// move to within mining range ~100 pixels
 					var offsetPoint:Point = this.getOffsetPoint(100);
 					this.moveCoords.x = offsetPoint.x;
@@ -188,12 +188,9 @@ package app.ai {
 					&& this.oParent.oGL.objectArray.indexOf(this.oParent) != i)			// make sure not to target self
 				
 				{
+                    tmpDist = this.oParent.getDistance(this.oParent.oGL.objectArray[i], this.oParent);
+                    
 					if (this.oParent.oGL.objectArray[i] is starBase) {
-						// find closest
-						dx = this.oParent.x - this.oParent.oGL.objectArray[i].x;
-						dy = this.oParent.y - this.oParent.oGL.objectArray[i].y;
-						tmpDist = this.oParent.getDistance(dx, dy);
-						
 						if (tmpDist <= dist) {
 							dist = tmpDist;
 							cargoDump = this.oParent.oGL.objectArray[i];
@@ -203,11 +200,6 @@ package app.ai {
 						
 						// if cargo won't fit, don't get distance
 						if (freeSpace - this.oParent.usedCargoSpace >= 0) {
-							// find closest
-							dx = this.oParent.x - this.oParent.oGL.objectArray[i].x;
-							dy = this.oParent.y - this.oParent.oGL.objectArray[i].y;
-							tmpDist = this.oParent.getDistance(dx, dy);
-							
 							if (tmpDist <= dist) {
 								dist = tmpDist;
 								cargoDump = this.oParent.oGL.objectArray[i];
