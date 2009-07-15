@@ -29,12 +29,21 @@ package app.loaders {
 	import flash.text.*;
 
 	public class imageLoader extends Sprite {
-		private var txtColor:uint = 0xFFFFFF;
 	
+		// data properties
 		private var loader:Loader = new Loader;
 		private var progressText:TextField = new TextField();
-		public var details:String;								// useful to set details for click events
-		private var isOffset:Boolean = false;						// whether or not to center the image to 0,0
+		public var details:String;	// useful to set details for click events
+		public var oData:Object;	// generic data holder
+		
+		// display properties
+		private var txtColor:uint = 0xFFFFFF;
+		private var isOffset:Boolean = false;	// whether or not to center the image to 0,0
+		
+		
+		//
+		///-- Constructor --///
+		//
 		
 		public function imageLoader(sURL:String, isOffset:Boolean = false):void {
 			this.progressText.textColor = this.txtColor;

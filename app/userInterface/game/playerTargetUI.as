@@ -120,6 +120,7 @@ package app.userInterface.game {
 		private function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.addChild(this.varText);
+			this.varText.selectable = false;
 		}
 		
 		private function gameLoadedHandler(e:Event):void {

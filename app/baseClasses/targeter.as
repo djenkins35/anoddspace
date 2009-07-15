@@ -90,6 +90,30 @@ package app.baseClasses {
 			this.addEventListener('applyDamage', applyDamage);
 		}
 		
+		//
+		///-- Private Methods --///
+		//
+		
+		private function createMainOverlay():void {
+			this.tempOverlay.graphics.lineStyle(this.grLineStyle[0], this.grLineStyle[1]);
+			this.tempOverlay.graphics.drawRect(-10, -10, this.imageLoader.width + 20, this.imageLoader.height + 20);
+			this.tempOverlay.cacheAsBitmap = true;
+		}
+		
+		private function createTempOverlay():void {
+			// little triangle
+			this.mainOverlay.graphics.lineStyle(this.grLineStyle2[0], this.grLineStyle2[1]);
+			this.mainOverlay.graphics.moveTo(this.imageLoader.width / 2 - 10, -10);
+			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2 + 10, -10);
+			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2, -20);
+			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2 - 10, -10);
+			this.mainOverlay.cacheAsBitmap = true;
+		}
+		
+		//
+		///-- Public Methods --///
+		//
+		
 		public function loadImages():void {
 			if (this.imageURL !== "") {
 				this.imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
@@ -174,20 +198,11 @@ package app.baseClasses {
 		}
 		
 		public function imageLoaded(e:Event):void {
-			// draw and cache the select boxes
-			this.tempOverlay.graphics.lineStyle(this.grLineStyle[0], this.grLineStyle[1]);
-			this.tempOverlay.graphics.drawRect(-10, -10, this.imageLoader.width + 20, this.imageLoader.height + 20);
-			this.tempOverlay.cacheAsBitmap = true;
+			// create and cache the select boxes
+			this.createTempOverlay();
+			this.createMainOverlay();
 			
-			
-			// little triangle
-			this.mainOverlay.graphics.lineStyle(this.grLineStyle2[0], this.grLineStyle2[1]);
-			this.mainOverlay.graphics.moveTo(this.imageLoader.width / 2 - 10, -10);
-			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2 + 10, -10);
-			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2, -20);
-			this.mainOverlay.graphics.lineTo(this.imageLoader.width / 2 - 10, -10);
-			this.mainOverlay.cacheAsBitmap = true;
-			
+			// offset the main image so (0,0) is the center
 			this.offsetSprite.x = -this.imageLoader.width / 2;
 			this.offsetSprite.y = -this.imageLoader.height / 2;
 			this.offsetSprite.addChildAt(this.imageLoader.content, 0);
@@ -315,7 +330,6 @@ package app.baseClasses {
 			this.removeEventListener('applyDamage', applyDamage);
 			this.removeEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
 			this.imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
-			this.imageLoader = null;
 			this.oGL.unloadObject(this);
 		}
 	}

@@ -84,6 +84,7 @@ package app.userInterface.game {
 			
 			this.rawChildren.addChild(this.radar);
 			this.addChild(this.coordText);
+			this.coordText.selectable = false;
 		}
 		
 		private function getTargetDistance(dx:Number, dy:Number):Number {	// used in heartbeat loop

@@ -4,6 +4,7 @@
 	<ship shipType="starter">
 		<name>Starter</name>
 		<imageURL>ship.starter.png</imageURL>
+		<UIiconURL>ship.starter.icon.png</UIiconURL>
 		<thrustImageURL>ship.starter.thrust.png</thrustImageURL>
 		<thrustImageOffset>0,36</thrustImageOffset>
 		
@@ -33,6 +34,7 @@
 	<ship shipType="speedyTest">
 		<name>Speedy</name>
 		<imageURL>speedy_01.png</imageURL>
+		<UIiconURL>ship.speedy.icon.png</UIiconURL>
 		<thrustImageURL>speedy_01.thrust.png</thrustImageURL>
 		<thrustImageOffset>3,45</thrustImageOffset>
 		
@@ -56,6 +58,7 @@
 	<ship shipType="lightTransport">
 		<name>Light Transport</name>
 		<imageURL>light.transport.png</imageURL>
+		<UIiconURL>ship.lightTransport.icon.png</UIiconURL>
 		<thrustImageURL>light.transport.thrust.png</thrustImageURL>
 		<thrustImageOffset>10,63</thrustImageOffset>
 		

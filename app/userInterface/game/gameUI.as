@@ -40,6 +40,7 @@ package app.userInterface.game {
 	import app.userInterface.game.playerTargetUI;
 	import app.userInterface.game.radarUI;
 	import app.userInterface.game.dragBoxUI;
+	import app.userInterface.game.fleetUI;
 
 	public class gameUI extends Canvas {
 		
@@ -68,7 +69,11 @@ package app.userInterface.game {
 		private var oRadar:radarUI;
 		private var radarUIDims:Array = [599,399];	// x,y
 		
+		private var oFleetUI:fleetUI;
+		private var fleetUICoords:Array = [0, 200];	// x,y
+		
 		private var dragBox:dragBoxUI;
+		
 		
 		//
 		///-- Constructor --///
@@ -132,6 +137,12 @@ package app.userInterface.game {
 			
 			// draw radar
 			this.toggleRadar(new Event('RadarOn'));
+			
+			// fleetUI box
+			this.oFleetUI = new fleetUI(this.oGL);
+			this.oFleetUI.x = this.fleetUICoords[0];
+			this.oFleetUI.y = this.fleetUICoords[1];
+			this.addChild(this.oFleetUI);
 			
 			// drag and select Box for mouse selecting multiple targets
 			this.dragBox = new dragBoxUI(this.oGL);

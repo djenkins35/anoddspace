@@ -35,33 +35,33 @@ package app.userInterface.game {
 		private var oGL:gameloader;
 		private var isBox:Boolean = false;			// whether or not to execute ENTER_FRAME code
 		private var tempArray:Array = new Array();	// collects the objects inside the select box
-
+		
 		// Display Properties
 		private var loStartPoint:Point = new Point();
 		private var loEndPoint:Point = new Point();
 		private var glStartPoint:Point = new Point();
 		private var glEndPoint:Point = new Point();
-
+		
 		private var grLineStyle:Array = [1, 0xFFFFFF];
 		private var grFillStyle:Array = [0xCCCCCC, 0.3];
-
-
+		
+		
 		//
 		///-- Constructor --///
 		//
-
+		
 		public function dragBoxUI(oGL:gameloader):void {
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.oGL = oGL;
 		}
-
+		
 		//
 		///-- Private Methods --///
 		//
-
+		
 		private function getBoxDims(p1:Point, p2:Point):Array {
 			var boxDims:Array = new Array();	// [w,h]
-
+			
 			if (p1.x <= 0 && p2.x <=0) {
 				if (p1.x > p2.x) {
 					boxDims[0] = p2.x - p1.x;
@@ -71,7 +71,7 @@ package app.userInterface.game {
 			} else {
 				boxDims[0] = p2.x - p1.x;
 			}
-
+			
 			if (p1.y <= 0 && p2.y <=0) {
 				if (p1.y > p2.y) {
 					boxDims[1] = p2.y - p1.y;
@@ -81,44 +81,44 @@ package app.userInterface.game {
 			} else {
 				boxDims[1] = p2.y - p1.y;
 			}
-
+			
 			return boxDims;
 		}
-
+		
 		//
 		///-- Event Listeners --///
 		//
-
+		
 		private function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.stage.addEventListener(MouseEvent.MOUSE_DOWN, startSelectBox);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
-
+		
 		private function startSelectBox(e:MouseEvent):void {
 			this.glStartPoint.x = e.stageX;
 			this.glStartPoint.y = e.stageY;
 			this.loStartPoint = this.oGL.gamescreen.globalToLocal(this.glStartPoint);
-
+			
 			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateBox);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, stopSelect);
 		}
-
+		
 		private function updateBox(e:MouseEvent):void {
 			this.isBox = true;
 			this.glEndPoint.x = e.stageX;
 			this.glEndPoint.y = e.stageY;
 			this.loEndPoint = this.oGL.gamescreen.globalToLocal(this.glEndPoint);
-
+			
 			var boxDims:Array = this.getBoxDims(this.glStartPoint, this.glEndPoint);
-
+			
 			this.graphics.clear();
 			this.graphics.lineStyle(this.grLineStyle[0], this.grLineStyle[1]);
 			this.graphics.beginFill(this.grFillStyle[0], this.grFillStyle[1]);
 			this.graphics.drawRect(this.glStartPoint.x, this.glStartPoint.y, boxDims[0], boxDims[1]);
 			this.graphics.endFill();
 		}
-
+		
 		private function stopSelect(e:MouseEvent):void {
 			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, updateBox);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, stopSelect);
@@ -138,22 +138,22 @@ package app.userInterface.game {
 				selectedObj.dispatchEvent(new Event('boxSelected'));
 			}
 		}
-
+		
 		private function onEnterFrame(e:Event):void {
 			if (this.isBox) {
 				// update the startpoint local coords every frame to handle selecting while moving
 				this.loStartPoint = this.oGL.gamescreen.globalToLocal(this.glStartPoint);
-
+				
 				var obj:Object;
 				this.tempArray = null;
 				this.tempArray = new Array();
-
+					
 				// this comment isn't very helpful
 				if (this.loStartPoint.x <= this.loEndPoint.x) {
 					if (this.loStartPoint.y <= this.loEndPoint.y) {
 						for each (obj in this.oGL.objectArray) {
 							obj.dispatchEvent(new Event('toggleSelectOff'));
-
+							
 							if (obj.x >= this.loStartPoint.x
 								&& obj.x <= this.loEndPoint.x)
 							{
@@ -168,7 +168,7 @@ package app.userInterface.game {
 					} else {
 						for each (obj in this.oGL.objectArray) {
 							obj.dispatchEvent(new Event('toggleSelectOff'));
-
+							
 							if (obj.x >= this.loStartPoint.x
 								&& obj.x <= this.loEndPoint.x)
 							{
@@ -185,7 +185,7 @@ package app.userInterface.game {
 					if (this.loStartPoint.y <= this.loEndPoint.y) {
 						for each (obj in this.oGL.objectArray) {
 							obj.dispatchEvent(new Event('toggleSelectOff'));
-
+							
 							if (obj.x <= this.loStartPoint.x
 								&& obj.x >= this.loEndPoint.x)
 							{
@@ -200,7 +200,7 @@ package app.userInterface.game {
 					} else {
 						for each (obj in this.oGL.objectArray) {
 							obj.dispatchEvent(new Event('toggleSelectOff'));
-
+							
 							if (obj.x <= this.loStartPoint.x
 								&& obj.x >= this.loEndPoint.x)
 							{
@@ -216,11 +216,11 @@ package app.userInterface.game {
 				}
 			}
 		}
-
+		
 		//
 		///-- Destructor --///
 		//
-
+		
 		public function destroy():void {
 			this.stage.removeEventListener(MouseEvent.MOUSE_DOWN, startSelectBox);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);

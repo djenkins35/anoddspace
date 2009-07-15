@@ -49,6 +49,7 @@ package app.baseClasses {
 		public var AI:artificialIgnorance;
 		public var mods:moduleLoader;
 		public var droneBay:droneLoader;
+		public var xSpec:XML;
 		
 		// used if creating a ship from mapData in gameloader.as
 		public var defaultActions:Array = ["follow", "harvest asteroids", "defend", "patrol", "go postal"];
@@ -67,6 +68,7 @@ package app.baseClasses {
 	
 		public function realMover(oGL:gameloader, xSpec:XML, xMapData:String = '') {	// under construction
 			this.oGL = oGL;
+			this.xSpec = xSpec;
 			this.imageDir = this.oGL.imageDir;
 			this.hullFull = this.hull = xSpec.hull;
 			this.shieldFull = this.shield = xSpec.shield;

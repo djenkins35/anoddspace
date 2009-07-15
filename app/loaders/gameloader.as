@@ -183,7 +183,7 @@ package app.loaders {
 				
 				if (this.objectArray[i] is realMover) {
 					this.gamescreen.addChildAt(this.objectArray[i], this.gamescreen.numChildren);
-				} else {
+				} else {	// place stationary objects lower in the display list
 					this.gamescreen.addChildAt(this.objectArray[i], 0);
 				}
 			}
@@ -200,7 +200,9 @@ package app.loaders {
 			this.dispatchEvent(new Event('gameLoaded'));
 		}
 		
+		//
 		///-- Public Functions --///
+		//
 		
 		public function unloadObject(obj:*):void {
 			this.gamescreen.removeChild(obj);
@@ -212,14 +214,6 @@ package app.loaders {
 				
 				// dispatch custom event for module listeners
 				this.objectArray[i].dispatchEvent(new dataEvent(obj, "targetDied"));
-				
-				// cycle targets on anything that was targeting the object that got blowed up
-				/*if (this.objectArray[i].oTarget == obj) {
-					// decrement the targeter's target index first to account for the splice
-					// doesn't matter if oTarget.indx = -1 because (-1 + 1 = 0) would be correct anyway
-					this.objectArray[i].oTarget.indx--;
-					this.objectArray[i].cycleTargets();
-				}*/
 			}
 			
 			obj = null;
