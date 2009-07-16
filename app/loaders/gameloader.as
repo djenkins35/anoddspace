@@ -45,6 +45,7 @@ package app.loaders {
 		public var oGS:gameSound;
 		public var usrInpt:userInput;
 		public var playerShip:realMover;
+		public var playerTargetArray:Array = new Array();	// target info for the UI
 		public var isUserInput:Boolean = true;
 		public var objectArray:Array = new Array();			// holds anything worth targeting
 		public var heartBeatInterval:uint = 250;			// milliseconds between global heartbeats
@@ -203,7 +204,7 @@ package app.loaders {
 		//
 		///-- Public Functions --///
 		//
-		
+			
 		public function unloadObject(obj:*):void {
 			this.gamescreen.removeChild(obj);
 			this.objectArray.splice(this.objectArray.indexOf(obj), 1);
@@ -322,7 +323,24 @@ package app.loaders {
 		private function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.addEventListener(Event.ENTER_FRAME, main);
+			this.addEventListener('updatePlayerTargetArray', updatePlayerTargetArray);
 			this.oPlayerData.load();
+		}
+		
+		private function updatePlayerTargetArray(e:dataEvent):void {
+			// deselect the currently selected objects
+			for each (var obj:Object in this.objectArray) {
+				obj.dispatchEvent(new Event('deSelected'));
+			}
+			
+			// reset the target array
+			this.playerTargetArray = new Array();
+			
+			// add ships to the target array, and dispatch the event to trigger the overlay
+			for each (var ship:realMover in e.dataObj) {
+				this.playerTargetArray.push(ship);
+				ship.dispatchEvent(new Event('selected'));
+			}
 		}
 		
 		//

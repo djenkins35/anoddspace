@@ -32,6 +32,7 @@ package app.userInterface.game {
 
 	import app.loaders.gameloader;
 	import app.loaders.imageLoader;
+	import app.loaders.dataEvent;
 	import app.baseClasses.realMover;
 
 	public class fleetUI extends Canvas {
@@ -91,7 +92,7 @@ package app.userInterface.game {
 			// now loop through the groups and add the icons and count numbers
 			for (var k:uint = 0, len3:uint = this.fleetArrayGrouped.length; k < len3; k++) {
 				var shipIcon:imageLoader = new imageLoader(this.imageDir + '/' + this.fleetArrayGrouped[k][0].xSpec.UIiconURL);
-				shipIcon.oData = this.fleetArrayGrouped[k];	// identifier for the mouse events
+				shipIcon.oData = k;	// identifier for the mouse events
 				shipIcon.y = k * this.iconHeight + 22;	// add a bit of an offset
 				shipIcon.x = 5;	// add another little offset
 				this.rawChildren.addChild(shipIcon);
@@ -147,12 +148,13 @@ package app.userInterface.game {
 		}
 		
 		private function iconMouseOver(e:MouseEvent):void {
-			// 'e.target.oData[0]' is a reference to the actual 'realMover' object
-			trace(e.target.oData[0].shield);
+			// need to add a little popup window with the group's details, hp/shield percentages
 		}
 		
 		private function iconClick(e:MouseEvent):void {
-		
+			// send dataEvent to the gameloader with the selected group
+			// this event also has a listener in playerTargetUI.as to update the action buttons, and target info
+			this.oGL.dispatchEvent(new dataEvent(this.fleetArrayGrouped[e.target.oData], 'updatePlayerTargetArray'));
 		}
 		
 		//

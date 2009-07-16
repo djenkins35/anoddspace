@@ -86,10 +86,8 @@ package app.userInterface.game {
 			
 			this.addEventListener('selected', onSelected);
 			this.addEventListener('deSelected', onDeselected);
-			this.addEventListener(MouseEvent.CLICK, onClick);
 			this.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			this.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 		}
 		
 		//
@@ -119,15 +117,6 @@ package app.userInterface.game {
 			this.updateGraphics();
 		}
 		
-		private function onClick(e:MouseEvent):void {
-			// tell target what to do
-			this.oGL.playerShip.oTarget.dispatchEvent(new dataEvent(this.actionText, 'doAction'));
-			
-			//this.dispatchEvent(new Event('selected'));
-			// tell parent to update the button highlighting
-			this.parent.dispatchEvent(new Event('actionButtonClick'));
-		}
-		
 		private function onSelected(e:Event):void {
 			if (this.rawChildren.contains(this.backgroundLoader)) {
 				this.rawChildren.removeChild(this.backgroundLoader);
@@ -152,11 +141,9 @@ package app.userInterface.game {
 		///-- Destructor --///
 		//
 		
-		private function destroy(e:Event):void {
-			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
+		public function destroy():void {
 			this.removeEventListener('selected', onSelected);
 			this.removeEventListener('deSelected', onDeselected);
-			this.removeEventListener(MouseEvent.CLICK, onClick);
 			this.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			this.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}

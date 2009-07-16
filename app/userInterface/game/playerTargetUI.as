@@ -32,7 +32,9 @@ package app.userInterface.game {
 	import mx.containers.VBox;
 	
 	import app.loaders.gameloader;
+	import app.loaders.dataEvent;
 	import app.baseClasses.asteroid;
+	import app.baseClasses.realMover;
 	import app.userInterface.game.actionButtonUI;
 	
 	
@@ -40,9 +42,9 @@ package app.userInterface.game {
 		
 		// Data Properties
 		private var oGL:gameloader;
-		private var iObjIndex:int;		// target's index in oGL.objectArray, used to avoid looping in onEnterFrame
 		private var actionArray:Array = [{name:"go postal",imageURL:"attack.png"},{name:"defend",imageURL:"defend.png"},{name:"follow",imageURL:"follow.png"},{name:"harvest asteroids",imageURL:"harvest.png"},{name:"patrol",imageURL:"patrol.png"}];
-				
+		private var buttonArray:Array = new Array(); // holds the created buttons to save from redrawing them every time the targets change
+		
 		// Display Properties
 		private var varText:Text = new Text();
 		private var buttonWidth:int = 24;	// used to calculate button spacing
@@ -63,52 +65,39 @@ package app.userInterface.game {
 		///-- Private Methods --///
 		//
 		
-		private function checkActionArray():void {
-			// if target is same faction as player, show the action menu
-			if (this.oGL.playerShip.oTarget.faction == this.oGL.playerShip.faction) {
-			
-				// only 'realMover' objects contain an AI
-				if (this.oGL.playerShip.oTarget.hasOwnProperty('AI')) {
-					// reset the actionBar
-					if (this.actionBar != null && this.contains(this.actionBar)) {
-						this.removeChild(this.actionBar);
+		private function createButtons():void {
+			for each (var action:Object in this.actionArray) {
+				var oActionButton:actionButtonUI = new actionButtonUI(this.oGL, action.name, action.imageURL);
+				oActionButton.addEventListener(MouseEvent.CLICK, onActionButtonClick)
+				this.buttonArray.push(oActionButton);
+			}
+		}
+		
+		private function checkHighlighting():void {
+			var actionsToHighlight:Array = new Array();
+			var isUnique:Boolean;
+		
+			for each (var ship:realMover in this.oGL.playerTargetArray) {
+				isUnique = true;
+				
+				for each (var sAction:String in actionsToHighlight) {
+					if (ship.AI.curAction == sAction) {
+						isUnique = false;
 					}
-					
-					this.actionBar = null;
-					this.actionBar = new Canvas();
-					this.actionBar.focusEnabled = false;	// prevents the gamescreen losing keyboard focus
-					
-					// set up the buttons/images that relate to the current target's actionArray
-					for each (var action:String in this.oGL.playerShip.oTarget.actionArr) {
-						for each (var image:Object in this.actionArray) {
-							if (action == image.name) {
-								var oActionButton:actionButtonUI = new actionButtonUI(this.oGL, action, image.imageURL);
-								
-								// check if we need to highlight this button
-								if (action == this.oGL.playerShip.oTarget.AI.curAction) {
-									oActionButton.dispatchEvent(new Event('selected'));
-								}
-								
-								this.actionBar.addChild(oActionButton);
-								oActionButton.y = 1;
-								oActionButton.x = this.actionBar.getChildIndex(oActionButton) * this.buttonWidth + (1 * this.actionBar.getChildIndex(oActionButton));
-							}
-						}
-					}
-					
-					// position the action bar beneath the target text info
-					this.varText.validateNow();	// needed to get the correct height
-					this.actionBar.y = this.varText.textHeight;
-					
-					// add the actionbar to the display list and add the button listener for selecting the highlighted button
-					this.addChild(this.actionBar);
-					this.actionBar.addEventListener('actionButtonClick', onActionButtonClick);
-				} else if (this.actionBar != null && this.contains(this.actionBar)) {
-					this.removeChild(this.actionBar);
 				}
-			} else {
-				if (this.actionBar != null && this.contains(this.actionBar)) {
-					this.removeChild(this.actionBar);
+				
+				if (isUnique) {
+					actionsToHighlight.push(ship.AI.curAction);
+				}
+			}
+			
+			for each (var oButton:actionButtonUI in this.buttonArray) {
+				oButton.dispatchEvent(new Event('deSelected'));
+				
+				for each (var sAction2:String in actionsToHighlight) {
+					if (oButton.actionText == sAction2) {
+						oButton.dispatchEvent(new Event('selected'));
+					}
 				}
 			}
 		}
@@ -121,29 +110,93 @@ package app.userInterface.game {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.addChild(this.varText);
 			this.varText.selectable = false;
+			this.createButtons();
 		}
 		
 		private function gameLoadedHandler(e:Event):void {
 			this.oGL.removeEventListener('gameLoaded', gameLoadedHandler);
+			this.oGL.addEventListener('updatePlayerTargetArray', updateTargets);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
-		private function onActionButtonClick(e:Event):void {	// cycle through the buttons to see which one is selected, and deselect the rest
-			var buttonArray:Array = this.actionBar.getChildren();	// this method only works for flex components
+		private function onActionButtonClick(e:MouseEvent):void {
+			// dispatch the action event to all the ships in the current group
+			for each (var ship:realMover in this.oGL.playerTargetArray) {
+				ship.dispatchEvent(new dataEvent(e.target.parent.actionText, 'doAction'));
+			}
 			
-			for each (var button:actionButtonUI in buttonArray) {
-				if (button.actionText == this.oGL.playerShip.oTarget.AI.curAction) {	// highlight this button
-					button.dispatchEvent(new Event('selected'));
-				} else {	// make sure it's not highlighted
-					button.dispatchEvent(new Event('deSelected'));
+			// reset the highlighting on the buttons to the new action
+			for each (var oButton:actionButtonUI in this.buttonArray) {
+				oButton.dispatchEvent(new Event('deSelected'));
+				
+				if (oButton.actionText == e.target.parent.actionText) {
+					oButton.dispatchEvent(new Event('selected'));
 				}
 			}
 		}
 		
-		private function onEnterFrame(e:Event):void {
+		private function updateTargets(e:dataEvent):void {
+			var availableActions:Array = new Array();
+			
+			// update the target text info
 			this.varText.text = "*Target Info*";
 			
-			if (this.oGL.playerShip.oTarget != null) {
+			for each (var ship:realMover in e.dataObj) {
+				this.varText.text += "\n" + ship.name;
+				
+				// get the available actions from each ship
+				for each (var action:String in ship.defaultActions) {
+					// sort unique actions
+					var isUnique:Boolean = true;
+					
+					for each (var sorted:String in availableActions) {
+						if (sorted == action) {
+							isUnique = false;
+						}
+					}
+					
+					if (isUnique) {
+						availableActions.push(action);
+					}
+				}
+			}
+			
+			// draw the actionBar
+			availableActions.sort(Array.CASEINSENSITIVE);
+			this.actionBar = new Canvas();
+			this.actionBar.focusEnabled = false;	// prevents the gamescreen losing keyboard focus
+			
+			for (var i:uint = 0, len:uint = availableActions.length; i < len; i++) {
+				for each (var oActionButton:actionButtonUI in this.buttonArray) {
+					if (availableActions[i] == oActionButton.actionText) {
+						oActionButton.x = this.buttonWidth * i;
+						this.actionBar.addChild(oActionButton);
+					}
+				}
+			}
+			
+			// update the button's highlighting
+			this.checkHighlighting();
+			
+			// need to wait until the Text control finishes rendering before setting the actionBar's y value
+			this.varText.addEventListener(FlexEvent.UPDATE_COMPLETE, offsetActionBar);
+			
+			if (!this.contains(this.actionBar)) {
+				this.addChild(this.actionBar);
+			}
+		}
+		
+		private function offsetActionBar(e:FlexEvent):void {
+			this.varText.removeEventListener(FlexEvent.UPDATE_COMPLETE, offsetActionBar);
+			this.actionBar.y = this.varText.height;
+		}
+		
+		private function onEnterFrame(e:Event):void {
+			//this.varText.text = "*Target Info*";
+			
+			
+			
+			/*if (this.oGL.playerShip.oTarget != null) {
 				this.varText.text += "\nName: " + this.oGL.playerShip.oTarget.name;
 				
 				if (this.oGL.playerShip.oTarget is asteroid) {
@@ -163,7 +216,7 @@ package app.userInterface.game {
 					// display the action array for this object (if applicable)
 					this.checkActionArray();
 				}
-			}
+			}*/
 		}
 		
 		
@@ -173,8 +226,9 @@ package app.userInterface.game {
 		
 		public function destroy(e:Event):void {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
-			this.actionBar.removeEventListener('actionButtonClick', onActionButtonClick);
+			this.oGL.removeEventListener('updatePlayerTargetArray', updateTargets);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			for each (var button:actionButtonUI in this.buttonArray) { button.destroy(); }
 		}
 	}
 }

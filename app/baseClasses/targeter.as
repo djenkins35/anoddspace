@@ -80,8 +80,9 @@ package app.baseClasses {
 		public function targeter():void {
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.addEventListener(MouseEvent.CLICK, clickHandler);
-			this.addEventListener('boxSelected', handleBoxSelect);
-			this.addEventListener('boxDeSelected', handleBoxSelect);
+			
+			this.addEventListener('selected', handleSelected);
+			this.addEventListener('deSelected', handleSelected);
 			this.addEventListener('toggleSelectOn', handleTempSelect);
 			this.addEventListener('toggleSelectOff', handleTempSelect);
 			this.addEventListener('cycleTargets', cycleTargets);
@@ -210,21 +211,17 @@ package app.baseClasses {
 		}
 		
 		public function clickHandler(e:MouseEvent):void {
-			this.oGL.playerShip.oTarget = this;
-			this.dispatchEvent(new Event('boxSelected'));
-		}
-		
-		private function handleBoxSelect(e:Event):void {	// show or hide the main overlay
-			if (e.type == 'boxSelected') {
-				// add mainOverlay
-				if (!this.offsetSprite.contains(this.mainOverlay)) {
-					this.offsetSprite.addChild(this.mainOverlay);
-				}
-			} else {
-				if (this.offsetSprite.contains(this.mainOverlay)) {
-					this.offsetSprite.removeChild(this.mainOverlay);
-				}
-			}
+			//this.oGL.playerShip.oTarget = this;
+			//this.dispatchEvent(new Event('boxSelected'));
+			
+			// needs to be redone to check if an action is selected before targeting
+			
+			// if clicked as an action's target
+				// don't deselect, but send some event to the selected group
+			// if not clicked as an action's target
+				// trigger this as the selected object
+				
+			trace('clickHandler needs to be redone in targeter.as');
 		}
 		
 		private function handleTempSelect(e:Event):void {	// show or hide the temporary overlay
@@ -315,13 +312,25 @@ package app.baseClasses {
 			}
 		}
 		
+		private function handleSelected(e:Event):void {
+			if (e.type == 'selected') {
+				if (!this.offsetSprite.contains(this.mainOverlay)) {
+					this.offsetSprite.addChild(this.mainOverlay);
+				}
+			} else {	// deselcted
+				if (this.offsetSprite.contains(this.mainOverlay)) {
+					this.offsetSprite.removeChild(this.mainOverlay);
+				}
+			}
+		}
+		
 		//
 		///-- Destructor --///
 		//
 		
 		public function destroy():void {	// overridden by most subclasses
-			this.removeEventListener('boxSelected', handleBoxSelect);
-			this.removeEventListener('boxDeSelected', handleBoxSelect);
+			this.removeEventListener('selected', handleSelected);
+			this.removeEventListener('deSelected', handleSelected);
 			this.removeEventListener('toggleSelectOn', handleTempSelect);
 			this.removeEventListener('toggleSelectOff', handleTempSelect);
 			this.removeEventListener('cycleTargets', cycleTargets);
