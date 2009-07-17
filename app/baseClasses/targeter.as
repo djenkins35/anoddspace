@@ -220,8 +220,9 @@ package app.baseClasses {
 				// don't deselect, but send some event to the selected group
 			// if not clicked as an action's target
 				// trigger this as the selected object
+				this.oGL.dispatchEvent(new dataEvent([this], 'updatePlayerTargetArray'));
 				
-			trace('clickHandler needs to be redone in targeter.as');
+			
 		}
 		
 		private function handleTempSelect(e:Event):void {	// show or hide the temporary overlay

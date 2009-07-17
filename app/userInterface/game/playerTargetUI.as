@@ -35,6 +35,7 @@ package app.userInterface.game {
 	import app.loaders.dataEvent;
 	import app.baseClasses.asteroid;
 	import app.baseClasses.realMover;
+	import app.baseClasses.starBase;
 	import app.userInterface.game.actionButtonUI;
 	
 	
@@ -42,13 +43,13 @@ package app.userInterface.game {
 		
 		// Data Properties
 		private var oGL:gameloader;
-		private var actionArray:Array = [{name:"go postal",imageURL:"attack.png"},{name:"defend",imageURL:"defend.png"},{name:"follow",imageURL:"follow.png"},{name:"harvest asteroids",imageURL:"harvest.png"},{name:"patrol",imageURL:"patrol.png"}];
+		private var actionArray:Array = [{name:"go postal",imageURL:"attack.png"},{name:"defend",imageURL:"defend.png"},{name:"follow",imageURL:"follow.png"},{name:"harvest asteroids",imageURL:"harvest.png"},{name:"patrol",imageURL:"patrol.png"},{name:"Dock",imageURL:"patrol.png"}];
 		private var buttonArray:Array = new Array(); // holds the created buttons to save from redrawing them every time the targets change
 		
 		// Display Properties
 		private var varText:Text = new Text();
 		private var buttonWidth:int = 24;	// used to calculate button spacing
-		private var actionBar:Canvas;	// display container for the action buttons
+		private var actionBar:Canvas = new Canvas();	// display container for the action buttons
 		
 		//
 		///-- Constructor --///
@@ -77,17 +78,37 @@ package app.userInterface.game {
 			var actionsToHighlight:Array = new Array();
 			var isUnique:Boolean;
 		
-			for each (var ship:realMover in this.oGL.playerTargetArray) {
+			for each (var obj:Object in this.oGL.playerTargetArray) {
 				isUnique = true;
 				
 				for each (var sAction:String in actionsToHighlight) {
-					if (ship.AI.curAction == sAction) {
-						isUnique = false;
+					
+					
+					// fix
+					
+					if (obj is realMover) {
+						if (obj.AI.curAction == sAction) {
+							isUnique = false;
+						}
+					} else if (obj is starBase) {
+						
 					}
+					
+					
+					
+					
+					
 				}
 				
 				if (isUnique) {
-					actionsToHighlight.push(ship.AI.curAction);
+				
+				
+					if (obj is realMover) {
+						actionsToHighlight.push(obj.AI.curAction);
+					}
+				
+				
+				
 				}
 			}
 			
@@ -121,15 +142,19 @@ package app.userInterface.game {
 		
 		private function onActionButtonClick(e:MouseEvent):void {
 			// dispatch the action event to all the ships in the current group
-			for each (var ship:realMover in this.oGL.playerTargetArray) {
-				ship.dispatchEvent(new dataEvent(e.target.parent.actionText, 'doAction'));
+			for each (var obj:Object in this.oGL.playerTargetArray) {
+				if (obj is starBase) {	// dispatch the event on the player's ship
+					this.oGL.playerShip.dispatchEvent(new dataEvent(e.currentTarget.actionText, 'doAction'));
+				} else {	// dispatch the event on the object
+					obj.dispatchEvent(new dataEvent(e.currentTarget.actionText, 'doAction'));
+				}
 			}
 			
 			// reset the highlighting on the buttons to the new action
 			for each (var oButton:actionButtonUI in this.buttonArray) {
 				oButton.dispatchEvent(new Event('deSelected'));
 				
-				if (oButton.actionText == e.target.parent.actionText) {
+				if (oButton.actionText == e.currentTarget.actionText) {
 					oButton.dispatchEvent(new Event('selected'));
 				}
 			}
@@ -137,52 +162,60 @@ package app.userInterface.game {
 		
 		private function updateTargets(e:dataEvent):void {
 			var availableActions:Array = new Array();
+			var isSameFaction:Boolean = true;
 			
 			// update the target text info
 			this.varText.text = "*Target Info*";
 			
-			for each (var ship:realMover in e.dataObj) {
-				this.varText.text += "\n" + ship.name;
+			for each (var obj:Object in e.dataObj) {
+				// check faction
+				if (obj.faction != this.oGL.playerFaction) { isSameFaction = false; }
+			
+				this.varText.text += "\n" + obj.name;
 				
-				// get the available actions from each ship
-				for each (var action:String in ship.defaultActions) {
-					// sort unique actions
-					var isUnique:Boolean = true;
-					
-					for each (var sorted:String in availableActions) {
-						if (sorted == action) {
-							isUnique = false;
+				if (obj is realMover || obj is starBase) {	// other objects don't have actions
+					// get the available actions from each obj
+					for each (var action:String in obj.defaultActions) {
+						// sort unique actions
+						var isUnique:Boolean = true;
+						
+						for each (var sorted:String in availableActions) {
+							if (sorted == action) {
+								isUnique = false;
+							}
+						}
+						
+						if (isUnique) {
+							availableActions.push(action);
 						}
 					}
-					
-					if (isUnique) {
-						availableActions.push(action);
-					}
 				}
 			}
 			
-			// draw the actionBar
-			availableActions.sort(Array.CASEINSENSITIVE);
-			this.actionBar = new Canvas();
-			this.actionBar.focusEnabled = false;	// prevents the gamescreen losing keyboard focus
-			
-			for (var i:uint = 0, len:uint = availableActions.length; i < len; i++) {
-				for each (var oActionButton:actionButtonUI in this.buttonArray) {
-					if (availableActions[i] == oActionButton.actionText) {
-						oActionButton.x = this.buttonWidth * i;
-						this.actionBar.addChild(oActionButton);
+			if (isSameFaction) {	// draw the actionBar
+				availableActions.sort(Array.CASEINSENSITIVE);
+				if (this.contains(this.actionBar)) { this.removeChild(this.actionBar); }
+				this.actionBar = new Canvas();
+				this.actionBar.focusEnabled = false;	// prevents the gamescreen losing keyboard focus
+				
+				for (var i:uint = 0, len:uint = availableActions.length; i < len; i++) {
+					for each (var oActionButton:actionButtonUI in this.buttonArray) {
+						if (availableActions[i] == oActionButton.actionText) {
+							oActionButton.x = this.buttonWidth * i;
+							this.actionBar.addChild(oActionButton);
+						}
 					}
 				}
-			}
-			
-			// update the button's highlighting
-			this.checkHighlighting();
-			
-			// need to wait until the Text control finishes rendering before setting the actionBar's y value
-			this.varText.addEventListener(FlexEvent.UPDATE_COMPLETE, offsetActionBar);
-			
-			if (!this.contains(this.actionBar)) {
-				this.addChild(this.actionBar);
+				
+				// update the button's highlighting
+				this.checkHighlighting();
+				
+				// need to wait until the Text control finishes rendering before setting the actionBar's y value
+				this.varText.addEventListener(FlexEvent.UPDATE_COMPLETE, offsetActionBar);
+				
+				if (!this.contains(this.actionBar)) { this.addChild(this.actionBar); }
+			} else { // remove the action bar if present
+				if (this.contains(this.actionBar)) { this.removeChild(this.actionBar); }
 			}
 		}
 		

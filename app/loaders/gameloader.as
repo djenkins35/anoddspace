@@ -45,6 +45,7 @@ package app.loaders {
 		public var oGS:gameSound;
 		public var usrInpt:userInput;
 		public var playerShip:realMover;
+		public var playerFaction:String;	// set in loadMapData() - eventually going to need a seperate player class for all this stuff
 		public var playerTargetArray:Array = new Array();	// target info for the UI
 		public var isUserInput:Boolean = true;
 		public var objectArray:Array = new Array();			// holds anything worth targeting
@@ -160,7 +161,7 @@ package app.loaders {
 						this.playerShip = new realMover(this, this.activeShipSpec);
 						this.playerShip.x = startPos[0];
 						this.playerShip.y = startPos[1];
-						this.playerShip.faction = xObj.faction;
+						this.playerShip.faction = this.playerFaction = xObj.faction;
 						this.objectArray.push(this.playerShip);
 						break;
 				}
@@ -337,7 +338,7 @@ package app.loaders {
 			this.playerTargetArray = new Array();
 			
 			// add ships to the target array, and dispatch the event to trigger the overlay
-			for each (var ship:realMover in e.dataObj) {
+			for each (var ship:Object in e.dataObj) {
 				this.playerTargetArray.push(ship);
 				ship.dispatchEvent(new Event('selected'));
 			}

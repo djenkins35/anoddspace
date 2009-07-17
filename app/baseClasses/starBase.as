@@ -37,6 +37,8 @@ package app.baseClasses {
 		public var isTargetDocked:Boolean = false;
 		public var baseName:String; 
 		
+		public var defaultActions:Array = ["Dock"];
+		
 		public function starBase(xSpec:XML, oGL:gameloader):void {
 			this.oGL = oGL;
 			this.imageDir = this.oGL.imageDir;

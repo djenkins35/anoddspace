@@ -63,7 +63,7 @@ package app.ai {
 		
 		public function doAction(s:String):void {
 			this.oParent.addEventListener("targetDied", handleTargetDied);
-		
+			
 			switch (s) {
 				case "follow" :
 					this.oParent.oTarget = this.oParent.oGL.playerShip;
@@ -97,6 +97,22 @@ package app.ai {
 					this.isStopping = true;
 					this.goPostal();
 					this.curAction = "go postal";
+					break;
+					
+				case "Dock" :	// used to dock the player's ship with a starbase
+					this.isChasing = false;
+					this.isMoving = true;
+					this.isStopping = false;
+					
+					// find out which target is the starBase
+					for each (var obj:Object in this.oParent.oGL.playerTargetArray) {
+						if (obj is starBase) {
+							this.moveCoords.x = obj.x;
+							this.moveCoords.y = obj.y;
+						}
+					}
+					
+					this.moveToCoords();
 					break;
 			}
 		}
