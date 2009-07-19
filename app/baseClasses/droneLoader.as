@@ -53,7 +53,7 @@ package app.baseClasses {
 		}
 		
 		private function getDroneSpec(droneSpec:String):void {
-			for each (var xSpec:XML in this.oGL.oEquipmentData.xmlData.*.*) {
+			for each (var xSpec:XML in this.oGL.xEquipmentData.*.*) {
 				if (xSpec.baseClass.toString() == droneSpec) {
 					this.xDroneSpec = xSpec;
 					break;

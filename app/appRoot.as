@@ -24,15 +24,16 @@ THE SOFTWARE.
 package app {
 	
 	import flash.events.*;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
 	
 	import mx.containers.Canvas;
 	import mx.containers.Panel;
-	import mx.containers.Box;
+	import mx.containers.HBox;
 	import mx.controls.List;
 	import mx.controls.TextArea;
 	import mx.events.ListEvent;
 	
-	import app.loaders.dataLoader;
 	import app.loaders.gameloader;
 	import app.loaders.levelEditor;
 	import app.userInterface.game.gameUI;
@@ -44,13 +45,13 @@ package app {
 		private var mapDataDir:String = 'app/xmlData/mapData/';
 		private var mapListURL:String = 'mapList.xml';
 		private var mapURL:String;
-		private var oMapList:dataLoader = new dataLoader(mapDataDir + mapListURL, "mapList" , this);
+		private var mapData:XML;
 		
 		///-- Display Properties --///
 		
 		private var pre:Panel;
 		private var mainMenu:List;
-		private var subWin:Box;
+		private var subWin:HBox;
 		private var sVersion:String = "v 0.20.1";
 		private var sTitle:String = "An Odd Space";
 		
@@ -72,19 +73,18 @@ package app {
 		
 		public function appRoot():void {
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
+			
+			/* load the map list */
+			var mapLoader:URLLoader = new URLLoader();
+			mapLoader.addEventListener('complete', mapDataLoaded);
+			mapLoader.load(new URLRequest(this.mapDataDir + '/' + this.mapListURL));
 		}
 		
-		///-- Data Functions --///
-		
-		public function dataCallBack(s:String):void {
-			//trace(this.oMapList.xmlData);
-		}
-		
+		//
 		///-- Display Functions --///
+		//
 		
 		private function loadMenu():void {
-			this.oMapList.load();
-			
 			this.pre = new Panel;
 			this.pre.title = this.sTitle;
 			this.pre.status = this.sVersion;
@@ -92,8 +92,7 @@ package app {
 			this.pre.width = this.panelDims[2];
 			this.pre.height = this.panelDims[3];
 			
-			this.subWin = new Box();
-			this.subWin.direction = "horizontal";
+			this.subWin = new HBox();
 			this.pre.addChild(this.subWin);
 			
 			this.mainMenu = new List();
@@ -108,7 +107,7 @@ package app {
 		
 		private function showMaplist():void {
 			var list1:List = new List();
-			list1.dataProvider = this.oMapList.xmlData.map;
+			list1.dataProvider = this.mapData.map;
 			list1.width = this.contentDims[2];
 			list1.height = this.contentDims[3];
 			list1.addEventListener(ListEvent.CHANGE, loadMap);
@@ -116,8 +115,9 @@ package app {
 		}
 		
 		private function showEditorList():void {
+			/* add a non-existant map as the first choice */
 			var list2:List = new List();
-			var temp:XML = this.oMapList.xmlData.copy();
+			var temp:XML = this.mapData.copy();
 			temp.prependChild("<map>New Map</map>");
 			var mapList:XMLList = temp.map;
 			
@@ -225,6 +225,10 @@ package app {
 		private function onEditorClosed(e:Event):void {
 			e.target.removeEventListener('editorClosed', onEditorClosed);
 			this.loadMenu();
+		}
+		
+		private function mapDataLoaded(e:Event):void {
+			this.mapData = XML(e.target.data);
 		}
 		
 		//

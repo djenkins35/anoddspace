@@ -220,12 +220,12 @@ CheckBox{
 }
 
 
-/*TabNavigator{
+TabNavigator{
 	border-style: solid;
 	background-color:#161616;
 	border-color:#555;
 	selectedTabTextStyleName: "selectedTab";
-}*/
+}
 
 
 /*HorizontalList{
@@ -611,7 +611,8 @@ VSlider
 SWFLoader
 {
 	brokenImageSkin: Embed(source="assets/skins/SWFLoader_brokenImageSkin.png");
-}
+}*/
+
 TabBar
 {
 	tabStyleName: "tabBarTab";
@@ -625,7 +626,7 @@ TabBar
 	firstTabStyleName: "tabBarTab";
 	lastTabStyleName: "tabBarTab";
 	fontSize: 9;
-}*/
+}
 
 .selectedTab
 {

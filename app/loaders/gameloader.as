@@ -26,6 +26,8 @@ package app.loaders {
 	import flash.display.Stage;
 	import flash.display.Sprite;
 	import flash.utils.Timer;
+	import flash.net.URLRequest;
+	import flash.net.URLLoader;
 	
 	import app.baseClasses.realMover;
 	import app.baseClasses.asteroid;
@@ -35,7 +37,6 @@ package app.loaders {
 	import app.loaders.gameSound;
 	import app.loaders.parallax;
 	import app.loaders.userInput;
-	import app.loaders.dataLoader;
 	import app.loaders.dataEvent;
 	
 	
@@ -58,117 +59,40 @@ package app.loaders {
 		public var xmlDataDir:String = "app/xmlData";
 		public var mapDataDir:String = xmlDataDir + "/mapData";
 		public var playerDataDir:String = xmlDataDir + "/playerData";
+		public var mapDataURL:String;	// set in constructor
+		public var playerDataURL:String = 'testPlayer.xml';	// tbr with player class
+		public var shipDataURL:String = 'ships.xml';
+		public var equipmentDataURL:String = 'equipment.xml';
 		
 		///-- XML Data --///
 		public var activeShip:XML;
 		public var activeShipSpec:XML;
-		public var oPlayerData:dataLoader = new dataLoader(playerDataDir + '/testPlayer.xml', 'playerData', this);
-		public var oMapData:dataLoader;		// instantiated in constructor
-		public var oShipData:dataLoader = new dataLoader(xmlDataDir + '/ships.xml', 'shipData', this);
-		public var oEquipmentData:dataLoader = new dataLoader(xmlDataDir + '/equipment.xml', 'equipmentData', this);
+		public var xPlayerData:XML;
+		public var xMapData:XML;
+		public var xShipData:XML;
+		public var xEquipmentData:XML;
+		
+		
+		//
+		///-- Constructor --///
+		//
 		
 		public function gameloader(map:String):void {
-			this.oMapData = new dataLoader(mapDataDir + '/' + map, 'mapData', this);
+			this.mapDataURL = map;
+			
+			// this starts the xml data loading chain that eventually calls the loadGame method to start the game
+			var playerDataLoader:URLLoader = new URLLoader();
+			playerDataLoader.addEventListener('complete', xmlDataLoaded);
+			playerDataLoader.load(new URLRequest(this.playerDataDir + '/' + this.playerDataURL));
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 		}
 		
 		//
-		///-- Callbacks & XML Loaders --///
+		///-- Private Methods --///
 		//
 		
-		public function dataCallBack(s:String):void {
-			switch (s) {
-				case "playerData" :
-					this.processPlayerData();
-					this.oShipData.load();
-					break;
-				
-				case "shipData" :
-					this.processShipData();
-					this.oEquipmentData.load();
-					break;
-				
-				case "equipmentData" :
-					this.oMapData.load();
-					break;
-				
-				case "mapData" :
-					this.loadGame();
-					break;
-			}
-		}
-		
-		private function processPlayerData():void {
-			for each (var ship:XML in this.oPlayerData.xmlData.ships.ship) {
-				if (ship.@active == "yes") {
-					this.activeShip = ship;
-					break;
-				}
-			}
-		}
-		
-		private function processShipData():void {
-			for each (var shipSpec:XML in this.oShipData.xmlData.ship) {
-				if (shipSpec.@shipType == this.activeShip.shipType) {
-					this.activeShipSpec = shipSpec;
-					break;
-				}
-			}
-		}
-		
-		///-- XML Data Loaded, Load Game --///
-		
-		private function loadMapData():void {
-			for each (var xObj:XML in this.oMapData.xmlData.*) {
-				
-				// get string value from the first tag
-				var sTest:String = xObj.toXMLString();
-				var s1:int = sTest.indexOf("<");
-				var s2:int = sTest.indexOf(">");
-				var sArr:Array = sTest.substring(s1 + 1,s2).split(' ');	// weed out attributes
-				
-				switch (sArr[0]) {
-					case "asteroid" :
-						var ast:asteroid = new asteroid(xObj, this);
-						this.objectArray.push(ast);
-						break;
-					
-					case "hanger" :
-						var fh:fighterHanger = new fighterHanger(xObj, this);
-						this.objectArray.push(fh);
-						break;
-						
-					case "starBase" :
-						var sb:starBase = new starBase(xObj, this);
-						this.objectArray.push(sb);
-						break;
-					
-					case "ship" :
-						for each (var shipSpec:XML in this.oShipData.xmlData.ship) {
-							if (shipSpec.@shipType == xObj.@shipType) {
-								var oShip:realMover = new realMover(this, shipSpec, xObj.toString());
-								
-								// set default actions
-								oShip.actionArr = oShip.defaultActions;
-								this.objectArray.push(oShip);
-							}
-						}
-						
-						break;
-						
-					case "playerStart" :
-						var startPos:Array = xObj.position.split(',');
-						this.playerShip = new realMover(this, this.activeShipSpec);
-						this.playerShip.x = startPos[0];
-						this.playerShip.y = startPos[1];
-						this.playerShip.faction = this.playerFaction = xObj.faction;
-						this.objectArray.push(this.playerShip);
-						break;
-				}
-			}
-		}
-		
-		private function loadGame():void {
+		private function loadGame():void {	// called at the end of the xmlDataLoaded chain
 			this.gamescreen = new Sprite();
 			this.addChild(this.gamescreen);
 			
@@ -177,8 +101,6 @@ package app.loaders {
 			this.addChild(this.usrInpt);
 			
 			this.oGS = new gameSound(this);
-			
-			this.loadMapData();
 			
 			for (var i:uint = 0, len:uint = this.objectArray.length; i < len; i++) {
 				this.objectArray[i].indx = i;
@@ -200,6 +122,22 @@ package app.loaders {
 			this.heartBeatTimer.start();
 			
 			this.dispatchEvent(new Event('gameLoaded'));
+		}
+		
+		private function getTargetDistance(dx:Number, dy:Number):Number {	// used in heartbeat loop
+			var maxRange:Number = this.playerShip.radarRange;						// throw out anything that is definitely out of range
+			
+			if (dx <= maxRange && dy <= maxRange) { 						// maybe in range
+				var dist:Number = Math.sqrt(dx * dx + dy * dy);
+				
+				if (dist <= maxRange) {
+					return dist;
+				} else {
+					return -1;
+				}
+			} else {
+				return -1;
+			}
 		}
 		
 		//
@@ -243,11 +181,6 @@ package app.loaders {
 			
 			this.objectArray = null;
 			
-			this.oPlayerData.destroy();
-			this.oMapData.destroy();
-			this.oShipData.destroy();
-			this.oEquipmentData.destroy();
-			
 			this.destroy();
 		}
 		
@@ -255,7 +188,7 @@ package app.loaders {
 		///-- Player Ship Functions --///
 		
 		public function updateCargo():void {
-			for each (var ship:XML in this.oPlayerData.xmlData.ships.ship) {
+			for each (var ship:XML in this.xPlayerData.ships.ship) {
 				if (ship.@active == "yes") {
 					ship.cargo = "";
 					
@@ -268,7 +201,7 @@ package app.loaders {
 		}
 		
 		public function updatePlayerData(shipName:String, base:starBase):void {
-			for each (var ship:XML in this.oPlayerData.xmlData.ships.ship) {
+			for each (var ship:XML in this.xPlayerData.ships.ship) {
 				if (ship.@active == "yes") {
 					ship.@active = "no";
 					ship.location = base.baseName;
@@ -285,7 +218,7 @@ package app.loaders {
 					ship.location = "";
 					this.activeShip = ship;
 					
-					this.processShipData();
+					//this.processShipData();
 				}
 			}
 		}
@@ -306,17 +239,6 @@ package app.loaders {
 			this.gamescreen.addChildAt(this.playerShip, this.gamescreen.numChildren);
 		}
 		
-		public function dockShip(dockTarget:starBase):void {
-			this.playerShip.AI.moveCoords.x = dockTarget.x;
-			this.playerShip.AI.moveCoords.y = dockTarget.y;
-			this.playerShip.AI.isStopping = true;
-			this.playerShip.AI.isMoving = true;
-			this.playerShip.AI.moveToCoords();
-			
-			this.usrInpt.toggleUserInput();
-			this.updateCargo();
-		}
-		
 		//
 		///-- Event Listeners --///
 		//
@@ -325,7 +247,107 @@ package app.loaders {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.addEventListener(Event.ENTER_FRAME, main);
 			this.addEventListener('updatePlayerTargetArray', updatePlayerTargetArray);
-			this.oPlayerData.load();
+			this.addEventListener('playerShipDocked', onPlayerShipDocked);
+			this.addEventListener('undockPlayerShip', onPlayerShipUndocked);
+		}
+		
+		private function xmlDataLoaded(e:Event):void {	// chain loads and processes the various xml data files
+			e.target.removeEventListener('complete', xmlDataLoaded);
+			
+			var xData:XML = XML(e.target.data);
+			
+			switch (xData.name().toString()) {
+				case 'player':	// get the active ship
+					this.xPlayerData = xData;
+					
+					for each (var ship:XML in this.xPlayerData.ships.ship) {
+						if (ship.@active == 'yes') { this.activeShip = ship; break; }
+					}
+					
+					// load the ship data
+					var shipDataLoader:URLLoader = new URLLoader();
+					shipDataLoader.addEventListener('complete', xmlDataLoaded);
+					shipDataLoader.load(new URLRequest(this.xmlDataDir + '/' + this.shipDataURL));
+					
+					break;
+					
+				case 'ships':	// get the active ship's specs
+					this.xShipData = xData;
+					
+					for each (var shipSpec:XML in this.xShipData.ship) {
+						if (shipSpec.@shipType == this.activeShip.shipType) { this.activeShipSpec = shipSpec; break; }
+					}
+					
+					// load equipment data
+					var equipmentDataLoader:URLLoader = new URLLoader();
+					equipmentDataLoader.addEventListener('complete', xmlDataLoaded);
+					equipmentDataLoader.load(new URLRequest(this.xmlDataDir + '/' + this.equipmentDataURL));
+					
+					break;
+					
+				case 'equipment':	// load the map data
+					this.xEquipmentData = xData;
+					var mapDataLoader:URLLoader = new URLLoader();
+					mapDataLoader.addEventListener('complete', xmlDataLoaded);
+					mapDataLoader.load(new URLRequest(this.mapDataDir + '/' + this.mapDataURL));
+					break;
+					
+				case 'mapObjects':	// populate the objectArray
+					//trace(xData);
+					this.xMapData = xData;
+					
+					
+					for each (var xObj:XML in this.xMapData.*) {
+						// get string value from the first tag
+						// can't use xObj.name because I've got my own name tag, oops
+						var sTest:String = xObj.toXMLString();
+						var s1:int = sTest.indexOf("<");
+						var s2:int = sTest.indexOf(">");
+						var sArr:Array = sTest.substring(s1 + 1,s2).split(' ');	// weed out attributes
+						
+						switch (sArr[0]) {
+							case "asteroid" :
+								var ast:asteroid = new asteroid(xObj, this);
+								this.objectArray.push(ast);
+								break;
+							
+							case "hanger" :
+								var fh:fighterHanger = new fighterHanger(xObj, this);
+								this.objectArray.push(fh);
+								break;
+								
+							case "starBase" :
+								var sb:starBase = new starBase(xObj, this);
+								this.objectArray.push(sb);
+								break;
+							
+							case "ship" :
+								for each (var xShipSpec:XML in this.xShipData.ship) {
+									if (xShipSpec.@shipType == xObj.@shipType) {
+										var oShip:realMover = new realMover(this, xShipSpec, xObj.toString());
+										this.objectArray.push(oShip);
+									}
+								}
+								
+								break;
+								
+							case "playerStart" :
+								var startPos:Array = xObj.position.split(',');
+								this.playerShip = new realMover(this, this.activeShipSpec);
+								this.playerShip.x = startPos[0];
+								this.playerShip.y = startPos[1];
+								this.playerShip.faction = this.playerFaction = xObj.faction;
+								this.objectArray.push(this.playerShip);
+								
+								break;
+						}
+					}
+					
+					// we're done, now load the game
+					this.loadGame();
+					
+					break;
+			}
 		}
 		
 		private function updatePlayerTargetArray(e:dataEvent):void {
@@ -344,25 +366,18 @@ package app.loaders {
 			}
 		}
 		
+		private function onPlayerShipDocked(e:dataEvent):void {	// gameUI.as also has a listener for this event to bring up the starBaseUI
+			this.usrInpt.dispatchEvent(new Event('toggleUserInputOff'));
+			this.updateCargo();
+		}
+		
+		private function onPlayerShipUndocked(e:Event):void {
+			this.usrInpt.dispatchEvent(new Event('toggleUserInputOn'));
+		}
+		
 		//
 		///-- Main Loops --///
 		//
-		
-		private function getTargetDistance(dx:Number, dy:Number):Number {	// used in heartbeat loop
-			var maxRange:Number = this.playerShip.radarRange;						// throw out anything that is definitely out of range
-			
-			if (dx <= maxRange && dy <= maxRange) { 						// maybe in range
-				var dist:Number = Math.sqrt(dx * dx + dy * dy);
-				
-				if (dist <= maxRange) {
-					return dist;
-				} else {
-					return -1;
-				}
-			} else {
-				return -1;
-			}
-		}
 		
 		private function sendHeartBeat(e:TimerEvent):void {
 			for (var i:uint = 0, len:int = this.objectArray.length; i < len; i++) {
@@ -419,6 +434,9 @@ package app.loaders {
 		public function destroy():void {
 			this.heartBeatTimer.removeEventListener(TimerEvent.TIMER, sendHeartBeat);
 			this.removeEventListener(Event.ENTER_FRAME, main);
+			this.removeEventListener('playerShipDocked', onPlayerShipDocked);
+			this.removeEventListener('undockPlayerShip', onPlayerShipUndocked);
+			this.removeEventListener('updatePlayerTargetArray', updatePlayerTargetArray);
 			this.dispatchEvent(new Event('gameClosed'));
 		}
 	}

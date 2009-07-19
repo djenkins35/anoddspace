@@ -110,7 +110,7 @@ package app.baseClasses {
 				this.name = xSpec.name;
 			}
 			
-			this.AI = new artificialIgnorance(this);
+			this.AI = new artificialIgnorance(this.oGL, this);
 			this.addEventListener(Event.ENTER_FRAME, main);
 		}
 		

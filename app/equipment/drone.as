@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 Copyright (c) 2009 Doug Jenkins
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -59,7 +59,7 @@ package app.equipment {
 		}
 		
 		private function loadModule(module:String):void {
-			for each (var xModule:XML in this.oGL.oEquipmentData.xmlData.modules.module) {
+			for each (var xModule:XML in this.oGL.xEquipmentData.modules.module) {
 				if (xModule.name == module) {
 					this.xModuleData = xModule;
 					break;

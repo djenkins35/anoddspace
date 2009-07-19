@@ -52,13 +52,15 @@ package app.loaders {
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownPressed);
 			this.stage.addEventListener(KeyboardEvent.KEY_UP, keyUpPressed);
 			this.stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+			this.addEventListener('toggleUserInputOn', toggleUserInput);
+			this.addEventListener('toggleUserInputOff', toggleUserInput);
 		}
 		
-		public function toggleUserInput():void {
-			if (this.isUserInput) {
-				this.isUserInput = false;
-			} else {
+		public function toggleUserInput(e:Event):void {
+			if (e.type == 'toggleUserInputOn') {
 				this.isUserInput = true;
+			} else if (e.type == 'toggleUserInputOff') {
+				this.isUserInput = false;
 			}
 		}
 		
@@ -160,6 +162,8 @@ package app.loaders {
 			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownPressed);
 			this.stage.removeEventListener(KeyboardEvent.KEY_UP, keyUpPressed);
 			this.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+			this.removeEventListener('toggleUserInputOn', toggleUserInput);
+			this.removeEventListener('toggleUserInputOff', toggleUserInput);
 			this.parent.removeChild(this);
 		}
 	}

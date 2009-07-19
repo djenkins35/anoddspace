@@ -34,6 +34,7 @@ package app.userInterface.game {
 	import mx.events.*;
 	
 	import app.loaders.gameloader;
+	import app.loaders.dataEvent;
 	import app.userInterface.game.gameOptionsUI;
 	import app.userInterface.game.debugUI;
 	import app.userInterface.game.playerShipUI;
@@ -72,6 +73,9 @@ package app.userInterface.game {
 		private var oFleetUI:fleetUI;
 		private var fleetUICoords:Array = [0, 200];	// x,y
 		
+		private var oStarBaseUI:starBaseUI;
+		private var starBaseUIDims:Array = [80, 60, 640, 480]; // x,y, w,h
+		
 		private var dragBox:dragBoxUI;
 		
 		
@@ -80,8 +84,10 @@ package app.userInterface.game {
 		//
 		
 		public function gameUI(oGL:gameloader):void {
-			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.oGL = oGL;
+			this.oGL.addEventListener('playerShipDocked', loadStarBaseUI);
+			
+			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 		}
 		
 		//
@@ -207,12 +213,22 @@ package app.userInterface.game {
 			this.oGameOptions = null;
 		}
 		
+		private function loadStarBaseUI(e:dataEvent):void {
+			this.oStarBaseUI = new starBaseUI(this.oGL, e.dataObj);
+			this.oStarBaseUI.x = this.starBaseUIDims[0];
+			this.oStarBaseUI.y = this.starBaseUIDims[1];
+			this.oStarBaseUI.width = this.starBaseUIDims[2];
+			this.oStarBaseUI.height = this.starBaseUIDims[3];
+			this.addChild(this.oStarBaseUI);
+		}
+		
 		//
 		///-- Destructor --///
 		//
 		
 		public function destroy():void {
 			this.bottomMenu.removeEventListener(ItemClickEvent.ITEM_CLICK, bottomMenuHandler);
+			this.oGL.removeEventListener('playerShipDocked', loadStarBaseUI);
 			if (this.isDebug) {this.oDebug.destroy()};
 			this.oPlayerUI.destroy();
 			this.removeChild(this.oPlayerTargetUI);

@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 Copyright (c) 2009 Doug Jenkins
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -47,7 +47,6 @@ package app.baseClasses {
 			this.x = sbPos[0];
 			this.y = sbPos[1];
 			this.offsetSprite.doubleClickEnabled = true;
-			this.actionArr = new Array("Dock");
 			this.baseName = xSpec.name;
 			this.name = xSpec.name;
 			this.faction = xSpec.faction;
@@ -58,45 +57,6 @@ package app.baseClasses {
 			this.isDockable = true; // hack
 		}
 		
-		private function dock():void {
-			this.isTargetDocked = true;
-			this.actionArr = new Array("Undock", "Change Ships", "Trade", "Hack the Gibson");
-			this.oGL.dockShip(this);
-			this.removeEventListener(MouseEvent.CLICK, clickHandler);
-		}
-		
-		private function undock():void {
-			this.isTargetDocked = false;
-			this.actionArr = new Array("Dock");
-			this.oGL.usrInpt.toggleUserInput();
-			this.addEventListener(MouseEvent.CLICK, clickHandler);
-		}
-		
-		/*public override function doAction(s:String):void {
-			switch (s) {
-				case "Dock" :
-					this.dock();
-					//this.oGL.ui.openStarBaseUI(this);
-					break;
-					
-				case "Undock" :
-					this.undock();
-					break;
-					
-				case "Change Ships" :
-					//this.oGL.ui.listShips(this.baseName);
-					break;
-			
-				case "Hack the Gibson" :
-					
-					break;
-			}
-		}*/
-		
-		///-- --///
-		
-		public function heartBeat():void {
-		
-		}
+		public function heartBeat():void {}
 	}
 }

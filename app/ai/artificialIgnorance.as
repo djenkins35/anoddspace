@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 Copyright (c) 2009 Doug Jenkins
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,8 @@ package app.ai {
 	
 	
 	public class artificialIgnorance extends Object {
+	
+		private var oGL:gameloader;
 		
 		// tbr
 		public var orbitRange:uint = 500;
@@ -53,69 +55,14 @@ package app.ai {
 		
 		///-- Constructor --///
 		
-		public function artificialIgnorance(oParent:realMover) {
+		public function artificialIgnorance(oGL:gameloader, oParent:realMover) {
+			this.oGL = oGL;
 			this.oParent = oParent;
 			this.oParent.addEventListener('cargoFull', onCargoFull);
 			this.oParent.addEventListener('doAction', onDoActionEvent);
 		}
 		
 		///-- Actions --///
-		
-		public function doAction(s:String):void {
-			this.oParent.addEventListener("targetDied", handleTargetDied);
-			
-			switch (s) {
-				case "follow" :
-					this.oParent.oTarget = this.oParent.oGL.playerShip;
-					this.isMoving = false;
-					this.isChasing = true;
-					this.isStopping = false;
-					this.curAction = "follow";
-					break;
-				
-				case "harvest asteroids" :
-					this.isChasing = false;
-					this.isStopping = false;
-					this.isMoving = false;
-					this.harvest();
-					this.curAction = "harvest asteroids";
-					break;
-				
-				case "defend" :
-					this.isChasing = false;
-					this.isMoving = false;
-					this.isStopping = true;
-					this.moveCoords.x = this.oParent.x;
-					this.moveCoords.y = this.oParent.y;
-					this.moveToCoords();
-					this.curAction = "defend";
-					break;
-					
-				case "go postal" :
-					this.isChasing = false;
-					this.isMoving = false;
-					this.isStopping = true;
-					this.goPostal();
-					this.curAction = "go postal";
-					break;
-					
-				case "Dock" :	// used to dock the player's ship with a starbase
-					this.isChasing = false;
-					this.isMoving = true;
-					this.isStopping = false;
-					
-					// find out which target is the starBase
-					for each (var obj:Object in this.oParent.oGL.playerTargetArray) {
-						if (obj is starBase) {
-							this.moveCoords.x = obj.x;
-							this.moveCoords.y = obj.y;
-						}
-					}
-					
-					this.moveToCoords();
-					break;
-			}
-		}
 		
 		public function harvest():void {
 			this.oParent.dispatchEvent(new Event('toggleModulesOff'));
@@ -128,7 +75,7 @@ package app.ai {
 				var dx:Number;
 				var dy:Number;
 				
-				for each (var ast:* in this.oParent.oGL.objectArray) {
+				for each (var ast:* in this.oGL.objectArray) {
 					if (ast is asteroid) {
 						dx = this.oParent.x - ast.x;
 						dy = this.oParent.y - ast.y;
@@ -198,27 +145,27 @@ package app.ai {
 			var dy:Number;
 			
 			// find something to dock with
-			for (var i:uint = 0, len:uint = this.oParent.oGL.objectArray.length; i < len; i++) {
-				if (this.oParent.oGL.objectArray[i].faction == this.oParent.faction		// test faction
-					&& this.oParent.oGL.objectArray[i].isDockable						// check if dockable
-					&& this.oParent.oGL.objectArray.indexOf(this.oParent) != i)			// make sure not to target self
+			for (var i:uint = 0, len:uint = this.oGL.objectArray.length; i < len; i++) {
+				if (this.oGL.objectArray[i].faction == this.oParent.faction		// test faction
+					&& this.oGL.objectArray[i].isDockable						// check if dockable
+					&& this.oGL.objectArray.indexOf(this.oParent) != i)			// make sure not to target self
 				
 				{
-                    tmpDist = this.oParent.getDistance(this.oParent.oGL.objectArray[i], this.oParent);
+                    tmpDist = this.oParent.getDistance(this.oGL.objectArray[i], this.oParent);
                     
-					if (this.oParent.oGL.objectArray[i] is starBase) {
+					if (this.oGL.objectArray[i] is starBase) {
 						if (tmpDist <= dist) {
 							dist = tmpDist;
-							cargoDump = this.oParent.oGL.objectArray[i];
+							cargoDump = this.oGL.objectArray[i];
 						}
 					} else {	// if not a starBase, check for cargo capacity
-						var freeSpace:int = this.oParent.oGL.objectArray[i].cargoCapacity - this.oParent.oGL.objectArray[i].usedCargoSpace;
+						var freeSpace:int = this.oGL.objectArray[i].cargoCapacity - this.oGL.objectArray[i].usedCargoSpace;
 						
 						// if cargo won't fit, don't get distance
 						if (freeSpace - this.oParent.usedCargoSpace >= 0) {
 							if (tmpDist <= dist) {
 								dist = tmpDist;
-								cargoDump = this.oParent.oGL.objectArray[i];
+								cargoDump = this.oGL.objectArray[i];
 							}
 						}
 					}
@@ -226,7 +173,7 @@ package app.ai {
 			}
 			
 			if (cargoDump != null) {	// need to update with dockPoint coords once implemented
-				//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' found ' + cargoDump);
+				//trace(this.oGL.objectArray.indexOf(this.oParent) + ' found ' + cargoDump);
 				this.moveCoords.x = cargoDump.x;
 				this.moveCoords.y = cargoDump.y;
 				this.isMoving = true;
@@ -237,7 +184,7 @@ package app.ai {
 				// find something to do while waiting for a cargo dump to come in range...
 				// need to start a heartbeat counter for re-checking for a cargo dump,
 				// or load the last known station coords...
-				trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' no dockable targets in range');
+				trace(this.oGL.objectArray.indexOf(this.oParent) + ' no dockable targets in range');
 			}
 		}
 		
@@ -509,7 +456,7 @@ package app.ai {
 				var i:int;
 				var len:int = this.oParent.cargoArray.length;
 				
-				//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' attempting to dump');
+				//trace(this.oGL.objectArray.indexOf(this.oParent) + ' attempting to dump');
 				
 				if (this.dockTarget is starBase) {
 					var sellValue:int = 0;
@@ -522,28 +469,28 @@ package app.ai {
 						}
 					}
 					
-					var curMoney:int = new int(this.oParent.oGL.oPlayerData.xmlData.money);
-					this.oParent.oGL.oPlayerData.xmlData.money = XML(sellValue + curMoney);
+					var curMoney:int = new int(this.oGL.xPlayerData.money);
+					this.oGL.xPlayerData.money = XML(sellValue + curMoney);
 					
-					//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' sold to starbase');
+					//trace(this.oGL.objectArray.indexOf(this.oParent) + ' sold to starbase');
 					
 					// go back to whatever you were doing
-					this.doAction(this.curAction);
+					this.oParent.dispatchEvent(new dataEvent(this.curAction, 'doAction'));
 				} else {
 					// transfer cargo
 					for (i = 0; i < len; i++) {
 						if (this.oParent.cargoArray[i].item == "minerals") {
 							
 							if (this.dockTarget.addCargo(this.oParent.cargoArray[i])) {
-								//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' successfully transferred cargo');
+								//trace(this.oGL.objectArray.indexOf(this.oParent) + ' successfully transferred cargo');
 								this.oParent.usedCargoSpace -= this.oParent.cargoArray[i].volume;
 								this.oParent.cargoArray.splice(this.oParent.cargoArray[i], 1);
 								
 								// go back to whatever you were doing
-								this.doAction(this.curAction);
+								this.oParent.dispatchEvent(new dataEvent(this.curAction, 'doAction'));
 							} else {	// not enough room on dockTarget
 								// ?
-								//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' not enough space on dockTarget ' + this.dockTarget.name);
+								//trace(this.oGL.objectArray.indexOf(this.oParent) + ' not enough space on dockTarget ' + this.dockTarget.name);
 								this.findCargoDump();
 							}
 						}
@@ -552,26 +499,87 @@ package app.ai {
 				}
 			} else {
 				// move closer
-				//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' not close enough');
+				//trace(this.oGL.objectArray.indexOf(this.oParent) + ' not close enough');
 				this.findCargoDump();
 			}
 		}
 		
 		public function onCargoFull(e:Event):void {
-			//trace(this.oParent.oGL.objectArray.indexOf(this.oParent) + ' cargoFull triggered');
+			//trace(this.oGL.objectArray.indexOf(this.oParent) + ' cargoFull triggered');
 			this.findCargoDump();
 			trace(this.oParent.name + "'s cargo full");
 		}
 		
 		public function handleTargetDied(e:dataEvent):void {
 			if (e.dataObj == this.oParent.oTarget) {
-				this.doAction(this.curAction);
+				this.oParent.dispatchEvent(new dataEvent(this.curAction, 'doAction'));
 				trace(this.oParent.name + "'s target died");
 			}
 		}
 		
+		private function onStarBaseDock(e:Event):void {
+			this.oParent.removeEventListener("stoppedMoving", onStarBaseDock);
+			
+			// trigger the docking function in gameloader.as
+			this.oGL.dispatchEvent(new dataEvent(this.dockTarget, 'playerShipDocked'));
+		}
+		
 		private function onDoActionEvent(e:dataEvent):void {
-            this.doAction(e.dataObj);
+           this.oParent.addEventListener("targetDied", handleTargetDied);
+			
+			switch (e.dataObj) {
+				case "follow" :
+					this.oParent.oTarget = this.oGL.playerShip;
+					this.isMoving = false;
+					this.isChasing = true;
+					this.isStopping = false;
+					this.curAction = "follow";
+					break;
+				
+				case "harvest asteroids" :
+					this.isChasing = false;
+					this.isStopping = false;
+					this.isMoving = false;
+					this.harvest();
+					this.curAction = "harvest asteroids";
+					break;
+				
+				case "defend" :
+					this.isChasing = false;
+					this.isMoving = false;
+					this.isStopping = true;
+					this.moveCoords.x = this.oParent.x;
+					this.moveCoords.y = this.oParent.y;
+					this.moveToCoords();
+					this.curAction = "defend";
+					break;
+					
+				case "go postal" :
+					this.isChasing = false;
+					this.isMoving = false;
+					this.isStopping = true;
+					this.goPostal();
+					this.curAction = "go postal";
+					break;
+					
+				case "Dock" :	// used to dock the player's ship with a starbase
+					this.isChasing = false;
+					this.isMoving = true;
+					this.isStopping = false;
+					
+					// find out which target is the starBase
+					for each (var obj:Object in this.oGL.playerTargetArray) {
+						if (obj is starBase) {
+							this.dockTarget = obj;	// set the dockTarget to send in the dataEvent (in case player changes targets while docking)
+							this.moveCoords.x = obj.x;
+							this.moveCoords.y = obj.y;
+						}
+					}
+					
+					this.oParent.addEventListener("stoppedMoving", onStarBaseDock);
+					this.moveToCoords();
+					break;
+			}
 		}
 		
 		///-- destructor --///

@@ -69,8 +69,6 @@ package app.baseClasses {
 		public var imageLoader:Loader = new Loader();
 		public var offsetSprite:Sprite = new Sprite();
 		
-		public var actionArr:Array;
-		
 		public const ninety:Number = Math.PI / 2;
 		
 		//

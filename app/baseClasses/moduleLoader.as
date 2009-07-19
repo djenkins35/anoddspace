@@ -32,6 +32,7 @@ package app.baseClasses {
 	
 	public class moduleLoader extends Object {
 		private var oParent:realMover;
+		private var oGL:gameloader;
 		public var externalHardPoints:Array = new Array();
 		public var externalModuleArray:Array = new Array();
 		public var internalModuleArray:Array = new Array();
@@ -42,6 +43,7 @@ package app.baseClasses {
 		
 		public function moduleLoader(xSpec:XML, oParent:realMover, xMapData:String = ''):void {
 			this.oParent = oParent;
+			this.oGL = this.oParent.oGL;
 			this.maxExternalModules = xSpec.maxExternalModules;
 			this.maxInternalModules = xSpec.maxInternalModules;
 			
@@ -59,7 +61,7 @@ package app.baseClasses {
 					this.addModule(xModule.@moduleType, xModule.@position, xModule);
 				}
 			} else {
-				for each (var xModule2:XML in this.oParent.oGL.activeShip.modules.module) {
+				for each (var xModule2:XML in this.oGL.activeShip.modules.module) {
 					this.addModule(xModule2.@moduleType, xModule2.@position, xModule2);
 				}
 			}
@@ -69,7 +71,7 @@ package app.baseClasses {
 		
 		public function addModule(moduleType:String, position:int, sModule:String):void {
 			if (moduleType == "external") {
-				for each (var xModule:XML in this.oParent.oGL.oEquipmentData.xmlData.modules.module) {
+				for each (var xModule:XML in this.oGL.xEquipmentData.modules.module) {
 					if (xModule.name.toString() == sModule) {
 						switch (xModule.baseClass.toString()) {
 							case "miningLaser" :

@@ -132,7 +132,7 @@ package app.userInterface.game {
 		private function gameLoadedHandler(e:Event):void {
 			// collect initial fleet object (same faction as player)
 			for each (var obj:* in this.oGL.objectArray) {
-				if (obj.faction == this.oGL.oMapData.xmlData.playerStart.faction
+				if (obj.faction == this.oGL.playerFaction
 					&& obj is realMover)	// can only give commands to realmovers
 				{
 					this.fleetArray.push(obj);
