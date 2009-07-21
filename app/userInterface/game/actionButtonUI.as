@@ -47,14 +47,14 @@ package app.userInterface.game {
 		private var oGL:gameloader;
 		public var actionText:String;	// String to display when moused-over
 		
+		private var backgroundLoader:imageLoader;
+		private var selBgLoader:imageLoader;
+		private var iconLoader:imageLoader;
+		
 		// Display Properties
 		private var imageDir:String = "UI";	// path where button icons are located relative to 'oGL.imageDir'
 		private var buttonBackgroundURL:String = 'button.purple.png';	// this should probably be loaded from a config file
-		private var backgroundLoader:imageLoader;
 		private var selectedBackgroundURL:String = 'button.yellow.png';	// this one is to highlight the current target's 'curAction'
-		private var selBgLoader:imageLoader;
-		private var iconLoader:imageLoader;
-		private var oToolTip:Text = new Text();
 		
 		private var fillStyle:uint = 0x000000;
 		private var curLineStyle:Array;	// holder for whichever linestyle is active
@@ -90,15 +90,6 @@ package app.userInterface.game {
 			this.addEventListener('deSelected', onDeselected);
 			this.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			this.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			
-			// create the tooltip
-			this.oToolTip.text = this.actionText;
-			this.oToolTip.selectable = false;
-			this.oToolTip.graphics.lineStyle(this.grLineStyle2[0], this.grLineStyle2[1]);
-			this.oToolTip.graphics.beginFill(0xCCCCCC, 0.5);
-			this.oToolTip.graphics.drawRect(0,0,70,20);
-			this.oToolTip.graphics.endFill();
-			this.oToolTip.cacheAsBitmap = true;
 		}
 		
 		//
@@ -121,18 +112,11 @@ package app.userInterface.game {
 		private function onMouseOver(e:MouseEvent):void {
 			this.curLineStyle = this.grLineStyle2;
 			this.updateGraphics();
-			
-			// show tooltip
-			this.oToolTip.x = e.localX;
-			this.oToolTip.y = e.localY + 30;
-			this.addChild(this.oToolTip);
 		}
 		
 		private function onMouseOut(e:MouseEvent):void {
 			this.curLineStyle = this.grLineStyle1;
 			this.updateGraphics();
-			
-			if (this.contains(this.oToolTip)) { this.removeChild(this.oToolTip); }
 		}
 		
 		private function onSelected(e:Event):void {

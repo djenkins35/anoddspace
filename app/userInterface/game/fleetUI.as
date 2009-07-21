@@ -44,12 +44,14 @@ package app.userInterface.game {
 		private var fleetArrayGrouped:Array = new Array();	// 2 dimensional array for display of 'grouped' ships
 		private var displayType:String = 'grouped';
 		private var imageDir:String = 'UI';	// directory relative to oGL.imageDir
-		private var iconArray:Array = new Array();	// useful for removing event listeners
+		private var iconArray:Array = new Array();	// this is display object array that contains the finished icons
 		
 		// Display Properties
-		private var containerDims:Array = [150, 300];	// x,y
+		private var containerDims:Array = [150, 300];	// width. height
 		private var grLineStyle1:Array = [1, 0x666666];
+		private var overlayStyle:Array = [0xFFFFFF, 0.3];	// fillstyle for highlighting
 		private var iconHeight:uint = 24 + 4;	// height of the little icon pictures plus spacing
+		private var containerPadding:uint = 5;
 		
 		//
 		///-- Constructor --///
@@ -93,8 +95,8 @@ package app.userInterface.game {
 			for (var k:uint = 0, len3:uint = this.fleetArrayGrouped.length; k < len3; k++) {
 				var shipIcon:imageLoader = new imageLoader(this.imageDir + '/' + this.fleetArrayGrouped[k][0].xSpec.UIiconURL);
 				shipIcon.oData = k;	// identifier for the mouse events
-				shipIcon.y = k * this.iconHeight + 22;	// add a bit of an offset
-				shipIcon.x = 5;	// add another little offset
+				shipIcon.y = k * this.iconHeight + this.infoText.height + this.containerPadding;	// add a bit of an offset for the text heading
+				shipIcon.x = this.containerPadding;	// add another little offset
 				this.rawChildren.addChild(shipIcon);
 				
 				// add a counter label for each group
@@ -121,11 +123,11 @@ package app.userInterface.game {
 		
 		private function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
-			
+			this.infoText.text = "*Fleet Info*";
 			this.addChild(this.infoText);
 			
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this.oGL.heartBeatTimer.addEventListener(TimerEvent.TIMER, heartBeat);
+			//this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			//this.oGL.heartBeatTimer.addEventListener(TimerEvent.TIMER, heartBeat);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 		}
 		
@@ -155,6 +157,18 @@ package app.userInterface.game {
 			// send dataEvent to the gameloader with the selected group
 			// this event also has a listener in playerTargetUI.as to update the action buttons, and target info
 			this.oGL.dispatchEvent(new dataEvent(this.fleetArrayGrouped[e.target.oData], 'updatePlayerTargetArray'));
+			
+			// reset the graphics for each icon
+			for each (var icon:imageLoader in this.iconArray) {
+				icon.graphics.clear();
+			}
+			
+			// highlight the selected icon
+			e.target.graphics.lineStyle(this.grLineStyle1[0], this.grLineStyle1[1]);
+			e.target.graphics.beginFill(this.overlayStyle[0], this.overlayStyle[1]);
+			e.target.graphics.drawRect(-this.containerPadding,0, this.containerDims[0], this.iconHeight);
+			e.target.graphics.endFill();
+			e.target.cacheAsBitmap = true;
 		}
 		
 		//
@@ -162,7 +176,7 @@ package app.userInterface.game {
 		//
 		
 		private function heartBeat(e:TimerEvent):void {
-			this.infoText.text = "*Fleet Info*";
+			//this.infoText.text = "*Fleet Info*";
 			
 			/*for each (var obj:* in this.fleetArray) {
 				this.infoText.text += "\n" + obj.name;
@@ -179,8 +193,8 @@ package app.userInterface.game {
 		
 		public function destroy(e:Event):void {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
-			this.oGL.heartBeatTimer.removeEventListener(TimerEvent.TIMER, heartBeat);
-			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			//this.oGL.heartBeatTimer.removeEventListener(TimerEvent.TIMER, heartBeat);
+			//this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
 			// remove mouse event listeners from each ship icon
 			for each (var icon:imageLoader in this.iconArray) {

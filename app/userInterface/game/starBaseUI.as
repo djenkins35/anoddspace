@@ -44,6 +44,7 @@ package app.userInterface.game {
 		// Display Properties
 		private var sTitle:String;
 		
+		
 		//
 		///-- Constructor --///
 		//
@@ -84,6 +85,14 @@ package app.userInterface.game {
 			
 			/* fetch data for starBase, player, and ship */
 			
+			
+			/*public var activeShip:XML;
+			public var activeShipSpec:XML;
+			public var xPlayerData:XML;
+			public var xMapData:XML;
+			public var xShipData:XML;
+			public var xEquipmentData:XML;
+			*/
 			
 			
 			// add listener for close button

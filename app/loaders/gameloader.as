@@ -32,7 +32,6 @@ package app.loaders {
 	import app.baseClasses.realMover;
 	import app.baseClasses.asteroid;
 	import app.baseClasses.starBase;
-	import app.userInterface.game.starBaseUI;
 	import app.baseClasses.fighterHanger;
 	import app.loaders.gameSound;
 	import app.loaders.parallax;
@@ -293,9 +292,7 @@ package app.loaders {
 					break;
 					
 				case 'mapObjects':	// populate the objectArray
-					//trace(xData);
 					this.xMapData = xData;
-					
 					
 					for each (var xObj:XML in this.xMapData.*) {
 						// get string value from the first tag

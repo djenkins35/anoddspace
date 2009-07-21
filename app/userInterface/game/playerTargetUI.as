@@ -24,6 +24,7 @@ THE SOFTWARE.
 package app.userInterface.game {
 
 	import flash.events.*;
+	import flash.geom.Point;
 
 	import mx.containers.Canvas;
 	import mx.events.*;
@@ -43,21 +44,32 @@ package app.userInterface.game {
 		
 		// Data Properties
 		private var oGL:gameloader;
-		private var actionArray:Array = [{name:"go postal",imageURL:"attack.png"},{name:"defend",imageURL:"defend.png"},{name:"follow",imageURL:"follow.png"},{name:"harvest asteroids",imageURL:"harvest.png"},{name:"patrol",imageURL:"patrol.png"},{name:"Dock",imageURL:"patrol.png"}];
+		private var actionArray:Array = [{name:"go postal",imageURL:"attack.png"},
+										{name:"defend",imageURL:"defend.png"},
+										{name:"follow",imageURL:"follow.png"},
+										{name:"harvest asteroids",imageURL:"harvest.png"},
+										{name:"patrol",imageURL:"patrol.png"},
+										{name:"Dock",imageURL:"patrol.png"}];	// should eventually load this from an external file
 		private var buttonArray:Array = new Array(); // holds the created buttons to save from redrawing them every time the targets change
 		
 		// Display Properties
-		private var varText:Text = new Text();
-		private var buttonWidth:int = 24;	// used to calculate button spacing
 		private var actionBar:Canvas = new Canvas();	// display container for the action buttons
+		private var varText:Text = new Text();
+		private var oToolTip:Text = new Text();	
+		
+		private var buttonWidth:int = 24;	// used to calculate button spacing
+		private var ttLineStyle:Array = [1, 0xFFFFFF];	// tooltip styles
+		private var ttFillStyle:Array = [0xCCCCCC, 0.3];
+		
 		
 		//
 		///-- Constructor --///
 		//
 		
 		public function playerTargetUI(oGL:gameloader):void {
-			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.oGL = oGL;
+			
+			this.addEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			this.oGL.addEventListener('gameLoaded', gameLoadedHandler);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, destroy);
 		}
@@ -69,7 +81,9 @@ package app.userInterface.game {
 		private function createButtons():void {
 			for each (var action:Object in this.actionArray) {
 				var oActionButton:actionButtonUI = new actionButtonUI(this.oGL, action.name, action.imageURL);
-				oActionButton.addEventListener(MouseEvent.CLICK, onActionButtonClick)
+				oActionButton.addEventListener(MouseEvent.CLICK, onActionButtonClick);
+				oActionButton.addEventListener(MouseEvent.MOUSE_OVER, actionButtonMouseOver);
+				oActionButton.addEventListener(MouseEvent.MOUSE_OUT, actionButtonMouseOut);
 				this.buttonArray.push(oActionButton);
 			}
 		}
@@ -224,6 +238,41 @@ package app.userInterface.game {
 			this.actionBar.y = this.varText.height;
 		}
 		
+		private function actionButtonMouseOver(e:MouseEvent):void {
+			this.oToolTip.addEventListener(FlexEvent.UPDATE_COMPLETE, resizeToolTip);
+			this.oToolTip.text = e.currentTarget.actionText;
+			
+			// position the tooltip below the cursor
+			var gloPoint:Point = new Point();
+			gloPoint.x = e.stageX;
+			gloPoint.y = e.stageY;
+			var loPoint:Point = this.globalToLocal(gloPoint);
+			
+			this.oToolTip.y = loPoint.y + 20;
+			this.oToolTip.x = loPoint.x;
+			this.addChild(this.oToolTip);
+		}
+		
+		private function resizeToolTip(e:FlexEvent):void {
+			this.oToolTip.removeEventListener(FlexEvent.UPDATE_COMPLETE, resizeToolTip);
+			
+			this.oToolTip.graphics.clear();
+			this.oToolTip.selectable = false;
+			this.oToolTip.graphics.lineStyle(this.ttLineStyle[0], this.ttLineStyle[1]);
+			this.oToolTip.graphics.beginFill(this.ttFillStyle[0], this.ttFillStyle[1]);
+			this.oToolTip.graphics.drawRect(0,0,e.currentTarget.width,e.currentTarget.height);
+			this.oToolTip.graphics.endFill();
+			this.oToolTip.cacheAsBitmap = true;
+		}
+		
+		private function actionButtonMouseOut(e:MouseEvent):void {
+			this.removeChild(this.oToolTip);
+		}
+		
+		//
+		///-- Main Loops --///
+		//
+		
 		private function onEnterFrame(e:Event):void {
 			//this.varText.text = "*Target Info*";
 			
@@ -261,7 +310,12 @@ package app.userInterface.game {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			this.oGL.removeEventListener('updatePlayerTargetArray', updateTargets);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			for each (var button:actionButtonUI in this.buttonArray) { button.destroy(); }
+			
+			for each (var button:actionButtonUI in this.buttonArray) { 
+				button.removeEventListener(MouseEvent.MOUSE_OVER, actionButtonMouseOver);
+				button.removeEventListener(MouseEvent.MOUSE_OUT, actionButtonMouseOut);
+				button.destroy();
+			}
 		}
 	}
 }
