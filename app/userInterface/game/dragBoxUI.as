@@ -29,6 +29,7 @@ package app.userInterface.game {
 
 	import app.loaders.gameloader;
 	import app.loaders.dataEvent;
+	import app.baseClasses.realMover;
 
 	public class dragBoxUI extends Shape {
 
@@ -151,73 +152,66 @@ package app.userInterface.game {
 				// update the startpoint local coords every frame to handle selecting while moving
 				this.loStartPoint = this.oGL.gamescreen.globalToLocal(this.glStartPoint);
 				
-				var obj:Object;
+				var bInBox:Boolean;	// saves state through the loop of whether or not object is within the bounding box
 				this.tempArray = null;
 				this.tempArray = new Array();
 					
-				// this comment isn't very helpful
-				if (this.loStartPoint.x <= this.loEndPoint.x) {
-					if (this.loStartPoint.y <= this.loEndPoint.y) {
-						for each (obj in this.oGL.objectArray) {
-							obj.dispatchEvent(new Event('toggleSelectOff'));
-							
+				// determine which objects are within the drag box
+				for each (var obj:Object in this.oGL.objectArray) {
+					bInBox = false;
+					obj.dispatchEvent(new Event('toggleSelectOff'));
+					
+					if (this.loStartPoint.x <= this.loEndPoint.x) {
+						if (this.loStartPoint.y <= this.loEndPoint.y) {
 							if (obj.x >= this.loStartPoint.x
 								&& obj.x <= this.loEndPoint.x)
 							{
 								if (obj.y >= this.loStartPoint.y
 									&& obj.y <= this.loEndPoint.y)
 								{
-									this.tempArray.push(obj);
-									obj.dispatchEvent(new Event('toggleSelectOn'));
+									bInBox = true;
 								}
 							}
-						}
-					} else {
-						for each (obj in this.oGL.objectArray) {
-							obj.dispatchEvent(new Event('toggleSelectOff'));
-							
+						} else {
 							if (obj.x >= this.loStartPoint.x
 								&& obj.x <= this.loEndPoint.x)
 							{
 								if (obj.y <= this.loStartPoint.y
 									&& obj.y >= this.loEndPoint.y)
 								{
-									this.tempArray.push(obj);
-									obj.dispatchEvent(new Event('toggleSelectOn'));
+									bInBox = true;
+								}
+							}
+						}
+					} else {
+						if (this.loStartPoint.y <= this.loEndPoint.y) {
+							if (obj.x <= this.loStartPoint.x
+								&& obj.x >= this.loEndPoint.x)
+							{
+								if (obj.y >= this.loStartPoint.y
+									&& obj.y <= this.loEndPoint.y)
+								{
+									bInBox = true;
+								}
+							}
+						} else {
+							if (obj.x <= this.loStartPoint.x
+								&& obj.x >= this.loEndPoint.x)
+							{
+								if (obj.y <= this.loStartPoint.y
+									&& obj.y >= this.loEndPoint.y)
+								{
+									bInBox = true;
 								}
 							}
 						}
 					}
-				} else {
-					if (this.loStartPoint.y <= this.loEndPoint.y) {
-						for each (obj in this.oGL.objectArray) {
-							obj.dispatchEvent(new Event('toggleSelectOff'));
-							
-							if (obj.x <= this.loStartPoint.x
-								&& obj.x >= this.loEndPoint.x)
-							{
-								if (obj.y >= this.loStartPoint.y
-									&& obj.y <= this.loEndPoint.y)
-								{
-									this.tempArray.push(obj);
-									obj.dispatchEvent(new Event('toggleSelectOn'));
-								}
-							}
-						}
-					} else {
-						for each (obj in this.oGL.objectArray) {
-							obj.dispatchEvent(new Event('toggleSelectOff'));
-							
-							if (obj.x <= this.loStartPoint.x
-								&& obj.x >= this.loEndPoint.x)
-							{
-								if (obj.y <= this.loStartPoint.y
-									&& obj.y >= this.loEndPoint.y)
-								{
-									this.tempArray.push(obj);
-									obj.dispatchEvent(new Event('toggleSelectOn'));
-								}
-							}
+					
+					if (bInBox) {
+						if (obj is realMover	// we only care about drag-selecting ships, other stuff is clickable
+							&& obj.faction == this.oGL.playerFaction) {	// only need to drag-select our own ships
+							this.tempArray.push(obj);
+							obj.dispatchEvent(new Event('toggleSelectOn'));
 						}
 					}
 				}

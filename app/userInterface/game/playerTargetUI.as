@@ -96,10 +96,6 @@ package app.userInterface.game {
 				isUnique = true;
 				
 				for each (var sAction:String in actionsToHighlight) {
-					
-					
-					// fix
-					
 					if (obj is realMover) {
 						if (obj.AI.curAction == sAction) {
 							isUnique = false;
@@ -107,22 +103,12 @@ package app.userInterface.game {
 					} else if (obj is starBase) {
 						
 					}
-					
-					
-					
-					
-					
 				}
 				
 				if (isUnique) {
-				
-				
 					if (obj is realMover) {
 						actionsToHighlight.push(obj.AI.curAction);
 					}
-				
-				
-				
 				}
 			}
 			
@@ -151,7 +137,6 @@ package app.userInterface.game {
 		private function gameLoadedHandler(e:Event):void {
 			this.oGL.removeEventListener('gameLoaded', gameLoadedHandler);
 			this.oGL.addEventListener('updatePlayerTargetArray', updateTargets);
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		private function onActionButtonClick(e:MouseEvent):void {
@@ -270,46 +255,12 @@ package app.userInterface.game {
 		}
 		
 		//
-		///-- Main Loops --///
-		//
-		
-		private function onEnterFrame(e:Event):void {
-			//this.varText.text = "*Target Info*";
-			
-			
-			
-			/*if (this.oGL.playerShip.oTarget != null) {
-				this.varText.text += "\nName: " + this.oGL.playerShip.oTarget.name;
-				
-				if (this.oGL.playerShip.oTarget is asteroid) {
-					this.varText.text += "\nMinerals: " + this.oGL.playerShip.oTarget.minerals;
-				} else {
-					this.varText.text += "\nShield: " + this.oGL.playerShip.oTarget.shield;
-					this.varText.text += "\nHull: " + this.oGL.playerShip.oTarget.hull;
-				}
-				
-				this.varText.text += "\nDistance: " + Math.round(this.oGL.playerShip.targetDistance);
-				this.varText.text += "\nFaction: " + this.oGL.playerShip.oTarget.faction;
-				
-				// only loop through these if target has changed
-				if (this.iObjIndex != this.oGL.playerShip.oTarget.indx) {
-					this.iObjIndex = this.oGL.playerShip.oTarget.indx;
-					
-					// display the action array for this object (if applicable)
-					this.checkActionArray();
-				}
-			}*/
-		}
-		
-		
-		//
 		///-- Destructor --///
 		//
 		
 		public function destroy(e:Event):void {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, destroy);
 			this.oGL.removeEventListener('updatePlayerTargetArray', updateTargets);
-			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
 			for each (var button:actionButtonUI in this.buttonArray) { 
 				button.removeEventListener(MouseEvent.MOUSE_OVER, actionButtonMouseOver);
