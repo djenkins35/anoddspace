@@ -390,8 +390,10 @@ package app.loaders {
 			if (this.playerShip != null) {
 				if (this.usrInpt.upArrowPressed) {
 					this.playerShip.applyThrust();
+					this.oGS.playSound('thrustSound', 'play');
 				} else {
 					this.playerShip.killThrust();
+					this.oGS.playSound('thrustSound', 'stop');
 				}
 				
 				if (this.usrInpt.downArrowPressed) {

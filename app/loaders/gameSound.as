@@ -32,10 +32,11 @@ package app.loaders {
 	
 	public class gameSound extends Object {
 		public var oGL:gameloader;
-		public var isSound:Boolean = false;
+		public var isSound:Boolean = true;
 		public var isHit:Boolean = false;
 		public var isMiningSound:Boolean = false;
 		public var isLaserSound:Boolean = false;
+		private var isThrust:Boolean = false;
 		
 		private var mainChannel:SoundChannel = new SoundChannel();
 		private var shipChannel:SoundChannel = new SoundChannel();
@@ -68,6 +69,9 @@ package app.loaders {
 			this.soundDir 		= this.oGL.soundDir;
 			this.thrustSound 	= new Sound(new URLRequest(this.soundDir + this.thrustSoundURL));
 			this.hitSound 		= new Sound(new URLRequest(this.soundDir + this.hitSoundURL));
+			
+			trace(this.soundDir + this.hitSoundURL);
+			
 			this.laserSound 	= new Sound(new URLRequest(this.soundDir + this.laserSoundURL));
 			this.boomSound 		= new Sound(new URLRequest(this.soundDir + this.boomSoundURL));
 			this.shieldWarning	= new Sound(new URLRequest(this.soundDir + this.shieldWarningURL));
@@ -127,9 +131,13 @@ package app.loaders {
 								break;
 								
 							case "thrustSound" :
-								this.thrustChannel = null;
-								this.thrustChannel = this.thrustSound.play(0, 1000);
-								this.thrustChannel.soundTransform = this.mainTransform;
+								if (!this.isThrust) {
+									trace('hey');
+									this.thrustChannel = null;
+									this.thrustChannel = this.thrustSound.play(0, 0);
+									this.isThrust = true;
+									//this.thrustChannel.soundTransform = this.mainTransform;
+								}
 								break;
 								
 							case "boomSound" :
@@ -157,10 +165,11 @@ package app.loaders {
 					case "stop" :
 						switch (s) {
 							case "thrustSound" :
-								if (this.thrustChannel != null) {
+								/*if (this.thrustChannel != null) {
 									this.thrustChannel.stop();
 									this.thrustChannel = null;
-								}
+								}*/
+								this.isThrust = false;
 								
 								break;
 								
@@ -191,7 +200,14 @@ package app.loaders {
 			}
 		}
 		
-		///-- destructor --///
+		public function heartBeat():void {
+			//this.isHit = false;
+			//this.hitChannel = null;
+		}
+		
+		//
+		///-- Destructor --///
+		//
 		
 		public function destroy():void {
 			this.oGL.removeEventListener('SoundOn', toggleSound);
@@ -210,11 +226,6 @@ package app.loaders {
 			this.laserSound = null;
 			this.boomSound = null;
 			this.shieldWarning = null;
-		}
-		
-		public function heartBeat():void {
-			this.isHit = false;
-			this.hitChannel = null;
 		}
 	}
 }

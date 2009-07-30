@@ -28,6 +28,7 @@ package app.userInterface.game {
 	import flash.geom.Point;
 
 	import app.loaders.gameloader;
+	import app.loaders.dataEvent;
 
 	public class dragBoxUI extends Shape {
 
@@ -101,7 +102,7 @@ package app.userInterface.game {
 			this.loStartPoint = this.oGL.gamescreen.globalToLocal(this.glStartPoint);
 			
 			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateBox);
-			this.stage.addEventListener(MouseEvent.MOUSE_UP, stopSelect);
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, cancelDrag);
 		}
 		
 		private function updateBox(e:MouseEvent):void {
@@ -117,6 +118,10 @@ package app.userInterface.game {
 			this.graphics.beginFill(this.grFillStyle[0], this.grFillStyle[1]);
 			this.graphics.drawRect(this.glStartPoint.x, this.glStartPoint.y, boxDims[0], boxDims[1]);
 			this.graphics.endFill();
+			
+			// replace the mouse up listener with the listener that updates the drag targets
+			this.stage.removeEventListener(MouseEvent.MOUSE_UP, cancelDrag);
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, stopSelect);
 		}
 		
 		private function stopSelect(e:MouseEvent):void {
@@ -129,14 +134,16 @@ package app.userInterface.game {
 			for each (var obj:Object in this.oGL.objectArray) {
 				// remove temp indicators
 				obj.dispatchEvent(new Event('toggleSelectOff'));
-				
-				// remove the selected indicators
-				obj.dispatchEvent(new Event('boxDeSelected'));
 			}
 			
-			for each (var selectedObj:Object in this.tempArray) {
-				selectedObj.dispatchEvent(new Event('boxSelected'));
-			}
+			// send dataEvent to the gameloader with the selected group
+			// this event also has a listener in playerTargetUI.as to update the action buttons, and target info
+			this.oGL.dispatchEvent(new dataEvent(this.tempArray, 'updatePlayerTargetArray'));
+		}
+		
+		private function cancelDrag(e:MouseEvent):void {
+			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, updateBox);
+			this.stage.removeEventListener(MouseEvent.MOUSE_UP, cancelDrag);
 		}
 		
 		private function onEnterFrame(e:Event):void {
