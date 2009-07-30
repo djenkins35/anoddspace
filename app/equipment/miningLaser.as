@@ -158,7 +158,7 @@ package app.equipment {
 				this.mineTarget();
 			} else {
 				this.isLaser = false;
-				this.oParent.oGL.oGS.playSound("miningLaser", "stop");
+				//this.oParent.oGL.oGS.playSound("miningLaser", "stop");
 			}
 		}
 		

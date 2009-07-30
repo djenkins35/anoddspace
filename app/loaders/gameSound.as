@@ -31,11 +31,12 @@ package app.loaders {
 	import app.loaders.gameloader;
 	
 	public class gameSound extends Object {
-		public var oGL:gameloader;
-		public var isSound:Boolean = true;
-		public var isHit:Boolean = false;
-		public var isMiningSound:Boolean = false;
-		public var isLaserSound:Boolean = false;
+		private var oGL:gameloader;
+		private var playerShip:Object;	// referenced here to be able to remove event listeners even if the gameloader's playership changes
+		public var isSound:Boolean = true;	// public for use in gameOptionsUI
+		private var isHit:Boolean = false;
+		private var isMiningSound:Boolean = false;
+		private var isLaserSound:Boolean = false;
 		private var isThrust:Boolean = false;
 		
 		private var mainChannel:SoundChannel = new SoundChannel();
@@ -46,7 +47,7 @@ package app.loaders {
 		private var laserTransform:SoundTransform = new SoundTransform(0.1);
 		private var hitTransform:SoundTransform = new SoundTransform(0.3);
 		
-		public var soundDir:String = '';
+		private var soundDir:String;	// retreived from oGL.soundDir
 		private var thrustSoundURL:String 		= "/thrust.mp3";
 		private var hitSoundURL:String 			= "/hitSoft.mp3";
 		private var laserSoundURL:String 		= "/laserFire1.mp3";
@@ -61,52 +62,58 @@ package app.loaders {
 		private var shieldWarning:Sound;
 		private var miningSound:Sound;
 		
+		
+		//
+		///-- Constructor --///
+		//
+		
 		public function gameSound(oGL:gameloader):void {
-			this.oGL 			= oGL;
+			this.oGL = oGL;
+			this.playerShip = this.oGL.playerShip;
+			this.loadSounds();
+			
 			this.oGL.addEventListener('SoundOn', toggleSound);
 			this.oGL.addEventListener('SoundOff', toggleSound);
 			
+			// add listeners for only the player's ship
+			this.oGL.playerShip.addEventListener('flameOn', playThrust);
+			this.oGL.playerShip.addEventListener('flameOff', killThrust);
+		}
+		
+		//
+		///-- Private Methods --///
+		//
+		
+		private function loadSounds():void {
 			this.soundDir 		= this.oGL.soundDir;
 			this.thrustSound 	= new Sound(new URLRequest(this.soundDir + this.thrustSoundURL));
 			this.hitSound 		= new Sound(new URLRequest(this.soundDir + this.hitSoundURL));
-			
-			trace(this.soundDir + this.hitSoundURL);
-			
 			this.laserSound 	= new Sound(new URLRequest(this.soundDir + this.laserSoundURL));
 			this.boomSound 		= new Sound(new URLRequest(this.soundDir + this.boomSoundURL));
 			this.shieldWarning	= new Sound(new URLRequest(this.soundDir + this.shieldWarningURL));
 			this.miningSound 	= new Sound(new URLRequest(this.soundDir + this.miningSoundURL));
 		}
 		
-		public function toggleSound(e:Event):void {
-			if (this.isSound == true) {
-				if (this.mainChannel != null) {		// hack for miningSound bug @ miningLaser.as::mineTarget()
-					this.mainChannel.stop();
-					this.mainChannel = null;
-				}
+		/*private function playSound(s:String, p:String):void {
+		
+			switch (p) {
+				case "play":
+					if (!this.isThrust) {
+						trace('flameon');
+						this.thrustChannel = null;
+						this.thrustChannel = this.thrustSound.play(0, 0);
+						this.isThrust = true;
+						//this.thrustChannel.soundTransform = this.mainTransform;
+					}
 				
-				this.killSounds();
-				this.isSound = false;
-			} else {
-				this.isSound = true;
+					break;
+					
+				case "stop":
+					this.isThrust = false;
+					break;
+			
 			}
-		}
-		
-		public function killSounds():void {
-			this.playSound('hitSound', 'stop');
-			this.playSound('laserSound', 'stop');
-			this.playSound('thrustSound', 'stop');
-			this.playSound('boomSound', 'stop');
-			this.playSound('shieldWarning', 'stop');
-			this.playSound('miningSound', 'stop');
-		}
-		
-		private function laserComplete(e:Event):void {
-			this.shipChannel.removeEventListener(Event.SOUND_COMPLETE, laserComplete);
-			this.isLaserSound = false;
-		}
-		
-		public function playSound(s:String, p:String):void {
+			
 			if (this.isSound) {
 				switch (p) {
 					case "play" :
@@ -165,10 +172,10 @@ package app.loaders {
 					case "stop" :
 						switch (s) {
 							case "thrustSound" :
-								/*if (this.thrustChannel != null) {
+								if (this.thrustChannel != null) {
 									this.thrustChannel.stop();
 									this.thrustChannel = null;
-								}*/
+								}
 								this.isThrust = false;
 								
 								break;
@@ -198,11 +205,63 @@ package app.loaders {
 						break;
 				}
 			}
+			
+			
+		}*/
+		
+		/*private function killSounds():void {
+			this.playSound('hitSound', 'stop');
+			this.playSound('laserSound', 'stop');
+			this.playSound('thrustSound', 'stop');
+			this.playSound('boomSound', 'stop');
+			this.playSound('shieldWarning', 'stop');
+			this.playSound('miningSound', 'stop');
+		}*/
+		
+		//
+		///-- Event Listeners --///
+		//
+		
+		private function toggleSound(e:Event):void {
+			if (this.isSound == true) {
+				if (this.mainChannel != null) {		// hack for miningSound bug @ miningLaser.as::mineTarget()
+					this.mainChannel.stop();
+					this.mainChannel = null;
+				}
+				
+				//this.killSounds();
+				this.isSound = false;
+			} else {
+				this.isSound = true;
+			}
 		}
 		
-		public function heartBeat():void {
-			//this.isHit = false;
-			//this.hitChannel = null;
+		private function laserComplete(e:Event):void {
+			this.shipChannel.removeEventListener(Event.SOUND_COMPLETE, laserComplete);
+			this.isLaserSound = false;
+		}
+		
+		
+		// testing
+		private function playThrust(e:Event):void {
+			if (!this.isThrust) {
+				if (this.isSound) {
+					this.thrustChannel = this.thrustSound.play(0, 1000);
+					this.isThrust = true;
+					this.thrustChannel.soundTransform = this.mainTransform;
+				}
+			}
+		}
+		
+		private function killThrust(e:Event):void {
+			if (this.isThrust) {
+				if (this.thrustChannel != null) {
+					this.thrustChannel.stop();
+					this.thrustChannel = null;
+				}
+				
+				this.isThrust = false;
+			}
 		}
 		
 		//
@@ -212,6 +271,8 @@ package app.loaders {
 		public function destroy():void {
 			this.oGL.removeEventListener('SoundOn', toggleSound);
 			this.oGL.removeEventListener('SoundOff', toggleSound);
+			this.oGL.playerShip.removeEventListener('flameOn', playThrust);
+			this.oGL.playerShip.removeEventListener('flameOff', killThrust);
 			
 			this.mainChannel = null;
 			this.shipChannel = null;

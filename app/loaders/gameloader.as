@@ -382,22 +382,22 @@ package app.loaders {
 					this.objectArray[i].heartBeat(); 
 				}
 			}
-			
-			this.oGS.heartBeat();
 		}
 		
 		private function main(e:Event):void {
 			if (this.playerShip != null) {
 				if (this.usrInpt.upArrowPressed) {
 					this.playerShip.applyThrust();
-					this.oGS.playSound('thrustSound', 'play');
 				} else {
-					this.playerShip.killThrust();
-					this.oGS.playSound('thrustSound', 'stop');
+					if (this.playerShip.AI.isStopping == false	// don't override the AI
+						&& this.playerShip.AI.isMoving == false) {
+						
+						this.playerShip.killThrust();
+					}
 				}
 				
 				if (this.usrInpt.downArrowPressed) {
-					this.playerShip.slowDown();
+					this.playerShip.AI.isStopping = true;
 				}
 				
 				if (this.usrInpt.leftArrowPressed) {
@@ -409,7 +409,6 @@ package app.loaders {
 				}
 			
 				if (this.usrInpt.tKeyPressed) {
-					//this.playerShip.cycleTargets();
 					this.playerShip.dispatchEvent(new Event('cycleTargets'));
 					this.usrInpt.tKeyPressed = false;
 				}

@@ -36,6 +36,7 @@ package app.baseClasses {
 	import app.equipment.miningLaser;
 	import app.equipment.laser;
 	import app.loaders.gameloader;
+	import app.loaders.dataEvent;
 	import app.ai.artificialIgnorance;
 	
 	
@@ -45,11 +46,14 @@ package app.baseClasses {
 		public var cargoCapacity:int;
 		public var usedCargoSpace:int = 0;
 		public var cargoArray:Array = new Array();
-		public var isThrust:Boolean = false;
 		public var AI:artificialIgnorance;
 		public var mods:moduleLoader;
 		public var droneBay:droneLoader;
 		public var xSpec:XML;
+		
+		// custom events for gamesound
+		private var eFlameOn:Event = new Event('flameOn');
+		private var eFlameOff:Event = new Event('flameOff');
 		
 		// used if creating a ship from mapData in gameloader.as
 		public var defaultActions:Array = ["follow", "harvest asteroids", "defend", "patrol", "go postal"];
@@ -181,18 +185,6 @@ package app.baseClasses {
 			this.tYv = this.acceleration * Math.cos(radRotAngle);
 		}
 		
-		public function flameOn():void {
-			this.offsetSprite.addChild(this.thrustOffset);
-		}
-		
-		public function flameOff():void {
-			try {
-				this.offsetSprite.removeChild(this.thrustOffset);
-			} catch(e:ArgumentError) {
-			
-			}
-		}
-		
 		public function getTrajectoryAngle():void {
 			if (this.newXv == 0) {
 				if (this.newYv <= 0) {
@@ -223,10 +215,6 @@ package app.baseClasses {
 			}
 		}
 		
-		public function getVelocity():void {
-			this.velocity = Math.sqrt(this.newXv * this.newXv + this.newYv * this.newYv);
-		}
-		
 		private function getMaxVectors():void {
 			this.maxXv = this.maxSpeed * Math.sin(this.trajectoryAngle);
 			this.maxYv = -this.maxSpeed * Math.cos(this.trajectoryAngle);
@@ -250,42 +238,26 @@ package app.baseClasses {
 			if (this.newYv > this.maxYv && this.newYv > 0) {
 				this.newYv = this.maxYv;
 				this.getTrajectoryAngle();
-			} else if (this.newYv < this.maxYv && this .newYv < 0) {
+			} else if (this.newYv < this.maxYv && this.newYv < 0) {
 				this.newYv = this.maxYv;
 				this.getTrajectoryAngle();
 			}
 			
-			if (this.isThrust == false) {
-				this.isThrust = true;
-				//this.oGL.oGS.playSound("thrustSound", "play");
-			}
+			this.velocity = Math.sqrt(this.newXv * this.newXv + this.newYv * this.newYv);
 			
-			this.getVelocity();
-			this.flameOn();
+			// add the thrust image
+			if (!this.offsetSprite.contains(this.thrustOffset)) { this.offsetSprite.addChild(this.thrustOffset); }
+			
+			// dispatch Event for gamesound
+			this.dispatchEvent(this.eFlameOn);
 		}
 		
 		public function killThrust():void {
-			this.flameOff();
+			// remove the thrust image
+			if (this.offsetSprite.contains(this.thrustOffset)) { this.offsetSprite.removeChild(this.thrustOffset); }
 					
-			if (this.isThrust == true) {
-				this.isThrust = false;
-				//this.oGL.oGS.playSound("thrustSound", "stop");
-			}
-		}
-		
-		public function slowDown():void {	// hack
-			/*if (this.velocity >= this.acceleration) {
-				this.newYv *= 0.95;
-				this.newXv *= 0.95;
-			} else {
-				this.newYv = 0; this.newXv = 0;
-			}
-			
-			this.getVelocity();*/
-			//this.AI.moveCoords.x = this.x;
-			//this.AI.moveCoords.y = this.y;
-			this.AI.isStopping = true;
-			//this.AI.isMoving = true;
+			// dispatch Event for gamesound
+			this.dispatchEvent(this.eFlameOff);
 		}
 		
 		public function rotateCCW():void {	// these will be useful for the lateral booster images once implemented

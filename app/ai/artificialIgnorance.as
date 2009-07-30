@@ -366,7 +366,6 @@ package app.ai {
 		}
 		
 		public function moveToCoords():void {	// set public var moveCoords:Point before using
-			this.oParent.killThrust();
 			// get vector Angle to moveCoords
 			var dx:Number = this.moveCoords.x - this.oParent.x;
 			var dy:Number = this.moveCoords.y - this.oParent.y;
@@ -429,7 +428,6 @@ package app.ai {
 							this.oParent.setThrustVectors();
 							
 							if (Math.abs(dx) <= Math.abs(this.oParent.tXv) && Math.abs(dy) <= Math.abs(this.oParent.tYv)) {
-								this.oParent.flameOn();
 								this.oParent.newXv = this.oParent.oTarget.newXv;
 								this.oParent.newYv = this.oParent.oTarget.newYv;
 							} else {

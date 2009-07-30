@@ -67,6 +67,7 @@ package app.loaders {
 			this.stageCenter.y = 300;
 			
 			this.loadImages();
+			this.toggleParallax(new Event('foo'));
 			this.addEventListener(Event.ENTER_FRAME, main);
 		}
 		
