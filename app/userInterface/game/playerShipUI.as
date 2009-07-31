@@ -28,7 +28,9 @@ package app.userInterface.game {
 	import mx.containers.Canvas;
 	import mx.events.*;
 	import mx.controls.ProgressBar;
+	import mx.controls.Button;
 	import mx.containers.VBox;
+	import mx.containers.HBox;
 	
 	import app.loaders.gameloader;
 	
@@ -42,6 +44,7 @@ package app.userInterface.game {
 		// Display Properties
 		private var shipHealthBar:ProgressBar = new ProgressBar();
 		private var shipShieldBar:ProgressBar = new ProgressBar();
+		private var droneToggle:Button = new Button();
 		
 		//
 		///-- Constructor --///
@@ -60,22 +63,29 @@ package app.userInterface.game {
 		private function onStageAdd(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, onStageAdd);
 			
-			var oContainer:VBox = new VBox();
+			var vContainer:VBox = new VBox();
+			var hContainer:HBox = new HBox();
 			
 			// ship shield bar
 			this.shipShieldBar.label = "Shield";
 			this.shipShieldBar.labelPlacement = "left";
 			this.shipShieldBar.mode = "manual";
-			oContainer.addChild(this.shipShieldBar);
+			vContainer.addChild(this.shipShieldBar);
 			
 			// ship health bar
 			this.shipHealthBar.label = "Hull";
 			this.shipHealthBar.labelPlacement = "left";
 			this.shipHealthBar.mode = "manual";
-			oContainer.addChild(this.shipHealthBar);
+			vContainer.addChild(this.shipHealthBar);
 			
-			oContainer.setStyle("horizontalAlign", "right");
-			this.addChild(oContainer);
+			vContainer.setStyle("horizontalAlign", "right");
+			hContainer.addChild(vContainer);
+			
+			this.droneToggle.label = "Drones";
+			this.droneToggle.addEventListener(MouseEvent.CLICK, toggleDrones);
+			hContainer.addChild(this.droneToggle);
+			
+			this.addChild(hContainer);
 		}
 		
 		private function gameLoadedHandler(e:Event):void {
@@ -83,6 +93,14 @@ package app.userInterface.game {
 			this.shieldFullRef = this.oGL.playerShip.shieldFull;
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
+		
+		private function toggleDrones(e:MouseEvent):void {
+			this.oGL.playerShip.dispatchEvent(new Event('toggleDrones'));
+		}
+		
+		//
+		///-- Main Loop --///
+		//
 		
 		private function onEnterFrame(e:Event):void {
 			this.shipShieldBar.setProgress(this.oGL.playerShip.shield, this.shieldFullRef);
@@ -96,6 +114,7 @@ package app.userInterface.game {
 		
 		public function destroy():void {
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.droneToggle.removeEventListener(MouseEvent.CLICK, toggleDrones);
 			this.oGL.removeEventListener('gameLoaded', gameLoadedHandler);
 		}
 	}

@@ -323,6 +323,7 @@ package app.baseClasses {
 				this.thrustLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, thrustLoaded);
 				this.graphics.clear();
 				this.mods.destroy();
+				this.droneBay.destroy();
 				this.oGL.unloadObject(this);
 			}
 		}

@@ -48,8 +48,9 @@ package app.baseClasses {
 			this.oParent = oParent;
 			this.oGL = this.oParent.oGL;
 			this.droneCapacity = xSpec.droneCapacity;
-			
 			this.getDroneSpec('lightFighter');	// hack
+			
+			this.oParent.addEventListener('toggleDrones', toggleDrones);
 		}
 		
 		private function getDroneSpec(droneSpec:String):void {
@@ -93,7 +94,7 @@ package app.baseClasses {
 		
 		///-- Public Functions --///
 		
-		public function toggleDrones():void {		// toggles the launch or recall state
+		public function toggleDrones(e:Event):void {		// toggles the launch or recall state
 			this.isActivated = true;
 		
 			if (this.isLaunching) {
@@ -138,6 +139,7 @@ package app.baseClasses {
 		///-- Destructor --///
 		
 		public function destroy():void {
+			this.oParent.removeEventListener('toggleDrones', toggleDrones);
 		}
 	}
 }
