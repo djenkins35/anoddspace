@@ -147,6 +147,10 @@ package app.userInterface.game {
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, cancelDrag);
 		}
 		
+		//
+		///-- Main Loops --///
+		//
+		
 		private function onEnterFrame(e:Event):void {
 			if (this.isBox) {
 				// update the startpoint local coords every frame to handle selecting while moving

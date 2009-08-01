@@ -10,6 +10,10 @@
   <position>84.95,290</position>
 </playerStart>
 
+<playerAI>
+	<faction>faction2</faction>
+</playerAI>
+
 <asteroid>
   <name>Asteroid 2</name>
   <imageURL>asteroid_02.png</imageURL>
