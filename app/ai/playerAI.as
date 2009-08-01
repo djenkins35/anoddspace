@@ -25,11 +25,15 @@ package app.ai {
 	import flash.events.*;
 	
 	import app.loaders.gameloader;
+	import app.loaders.dataEvent;
+	import app.baseClasses.realMover;
+	import app.baseClasses.fighterHanger;
 	
 	public class playerAI extends Object {
 	
 		private var oGL:gameloader;
 		private var faction:String;
+		private var assetArray:Array = new Array();
 		
 		
 		//
@@ -47,14 +51,30 @@ package app.ai {
 		///-- Private Methods --///
 		//
 		
-		
-		
 		//
 		///-- Event Listeners --///
 		//
 		
 		private function onGameLoaded(e:Event):void {
-			trace('game loaded');
+			// collect our faction's objects
+			for each (var obj:Object in this.oGL.objectArray) {
+				if ((obj is realMover || obj is fighterHanger) 
+					&& obj.faction == this.faction)
+				{
+					this.assetArray.push(obj);
+					
+					// hack
+					var bIsMiner:Boolean = false;
+					
+					if (obj.hasOwnProperty('mods')) {
+						for each (var module:Object in obj.mods.externalModuleArray) {
+							if (module.name == 'miningLaserSM') { bIsMiner = true; }
+						}
+					}
+					
+					if (bIsMiner) { obj.dispatchEvent(new dataEvent('harvest asteroids', 'doAction')); }
+				}
+			}
 		}
 		
 		//
