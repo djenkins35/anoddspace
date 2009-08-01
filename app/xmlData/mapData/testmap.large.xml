@@ -10,6 +10,10 @@
   <faction>faction1</faction>
 </playerStart>
 
+<playerAI>
+	<faction>faction2</faction>
+</playerAI>
+
 <starBase>
   <name>Faction 1 Base</name>
   <imageURL>base01.png</imageURL>

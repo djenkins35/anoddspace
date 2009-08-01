@@ -37,6 +37,7 @@ package app.loaders {
 	import app.loaders.parallax;
 	import app.loaders.userInput;
 	import app.loaders.dataEvent;
+	import app.ai.playerAI;
 	
 	
 	public class gameloader extends Sprite {
@@ -44,13 +45,18 @@ package app.loaders {
 		public var pllx:parallax;
 		public var oGS:gameSound;
 		public var usrInpt:userInput;
+		public var AIArray:Array = new Array();	// contains the 'playerAI' (CPU-controlled) opponents - populated in xmlDataLoaded()::'mapObjects'
+		
+		public var isUserInput:Boolean = true;
+		
+		public var heartBeatTimer:Timer = new Timer(250, 0);	// milliseconds between global heartbeats
+		public var objectArray:Array = new Array();			// holds anything worth targeting
+		
 		public var playerShip:realMover;
 		public var playerFaction:String;	// set in loadMapData() - eventually going to need a seperate player class for all this stuff
 		public var playerTargetArray:Array = new Array();	// target info for the UI
-		public var isUserInput:Boolean = true;
-		public var objectArray:Array = new Array();			// holds anything worth targeting
-		public var heartBeatInterval:uint = 250;			// milliseconds between global heartbeats
-		public var heartBeatTimer:Timer = new Timer(heartBeatInterval, 0);
+		
+		
 		
 		///-- Data Directories --///
 		public var imageDir:String = "app/media/images";
@@ -123,22 +129,6 @@ package app.loaders {
 			this.dispatchEvent(new Event('gameLoaded'));
 		}
 		
-		private function getTargetDistance(dx:Number, dy:Number):Number {	// used in heartbeat loop
-			var maxRange:Number = this.playerShip.radarRange;						// throw out anything that is definitely out of range
-			
-			if (dx <= maxRange && dy <= maxRange) { 						// maybe in range
-				var dist:Number = Math.sqrt(dx * dx + dy * dy);
-				
-				if (dist <= maxRange) {
-					return dist;
-				} else {
-					return -1;
-				}
-			} else {
-				return -1;
-			}
-		}
-		
 		//
 		///-- Public Functions --///
 		//
@@ -176,6 +166,10 @@ package app.loaders {
 			for each (var obj:* in this.objectArray) {
 				obj.destroy();
 				obj = null;
+			}
+			
+			for each (var cpuAI:playerAI in this.AIArray) {
+				cpuAI.destroy();
 			}
 			
 			this.objectArray = null;
@@ -337,6 +331,11 @@ package app.loaders {
 								this.objectArray.push(this.playerShip);
 								
 								break;
+								
+							case "playerAI" :
+								var cpuAI:playerAI = new playerAI(this, xObj.faction);
+								this.AIArray.push(cpuAI);
+								break;
 						}
 					}
 					
@@ -382,6 +381,8 @@ package app.loaders {
 					this.objectArray[i].heartBeat(); 
 				}
 			}
+			
+			for each (var cpuAI:playerAI in this.AIArray) { cpuAI.heartBeat(); }
 		}
 		
 		private function main(e:Event):void {
