@@ -99,24 +99,14 @@ package app.equipment {
 				// make sure our target isn't gone or out of range
 				if (this.oParent.oGL.objectArray.indexOf(this.oTarget) != -1) {
 					if (dist <= this.attackRange) {
-						
-						
-						
 						if (this.tick >= this.delay && this.tick < this.stopTime) {
-							
 							this.isLaser = true;
-							
 						} else if (this.tick == this.stopTime) {
-							
 							this.isLaser = false;
 							
 							// apply damage
 							this.oTarget.dispatchEvent(new dataEvent({ shield: this.damageShield, hull: this.damageHull}, 'applyDamage'));
 						}
-						
-						
-						
-						
 					} else {
 						this.isLaser = false;
 					}

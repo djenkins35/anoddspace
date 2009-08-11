@@ -121,12 +121,12 @@ package app.ai {
 				// move closer
 				if (this.oParent.targetDistance > this.orbitRange) {
 					// get a point that is within range
-					var offsetPoint:Point = this.getOffsetPoint(this.orbitRange - 100);
-					this.moveCoords.x = offsetPoint.x;
-					this.moveCoords.y = offsetPoint.y;
+					//var offsetPoint:Point = this.getOffsetPoint(this.orbitRange - 100);
+					//this.moveCoords.x = offsetPoint.x;
+					//this.moveCoords.y = offsetPoint.y;
 					
-					this.isStopping = true;
-					this.isMoving = true;
+					//this.isStopping = true;
+					//this.isMoving = true;
 				}
 				
 				this.oParent.dispatchEvent(new Event("toggleModulesOn"));
@@ -505,13 +505,13 @@ package app.ai {
 		public function onCargoFull(e:Event):void {
 			//trace(this.oGL.objectArray.indexOf(this.oParent) + ' cargoFull triggered');
 			this.findCargoDump();
-			trace(this.oParent.name + "'s cargo full");
+			//trace(this.oParent.name + "'s cargo full");
 		}
 		
 		public function handleTargetDied(e:dataEvent):void {
 			if (e.dataObj == this.oParent.oTarget) {
 				this.oParent.dispatchEvent(new dataEvent(this.curAction, 'doAction'));
-				trace(this.oParent.name + "'s target died");
+				//trace(this.oParent.name + "'s target died");
 			}
 		}
 		

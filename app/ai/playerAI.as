@@ -65,14 +65,17 @@ package app.ai {
 					
 					// hack
 					var bIsMiner:Boolean = false;
+					var bIsAggressive:Boolean = false;
 					
 					if (obj.hasOwnProperty('mods')) {
 						for each (var module:Object in obj.mods.externalModuleArray) {
 							if (module.name == 'miningLaserSM') { bIsMiner = true; }
+							if (module.name == 'laserSM') { bIsAggressive = true; }
 						}
 					}
 					
 					if (bIsMiner) { obj.dispatchEvent(new dataEvent('harvest asteroids', 'doAction')); }
+					if (bIsAggressive) { obj.dispatchEvent(new dataEvent('go postal', 'doAction')); }
 				}
 			}
 		}

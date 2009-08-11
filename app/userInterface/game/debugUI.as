@@ -38,8 +38,8 @@ package app.userInterface.game {
 		private var oGL:Object;
 		private var frameCounter:Number = 0;
 		private var frameTimer:Timer = new Timer(1000, 0);
-		private var frameRate:int;			// frames per second
-		private var targetRef:Object;		// Short reference for 'this.oGL.playerShip.oTarget'
+		private var frameRate:int;	// frames per second
+		private var targetRef:Object;	// reference to the first object in 'oGL.playerTargetArray'
 		
 		// Display Properties
 		private var debugDims:Array = [250, 175];	// width, height
@@ -73,7 +73,7 @@ package app.userInterface.game {
 		
 		private function onEnterFrame(e:Event):void {
 			this.frameCounter++;
-			this.targetRef = this.oGL.playerShip.oTarget;
+			this.targetRef = this.oGL.playerTargetArray[0];
 			
 			this.textBox.text = "*Debug*";
 			this.textBox.text += "\n" + this.frameRate + " FPS";
@@ -83,7 +83,8 @@ package app.userInterface.game {
 			
 			if (targetRef != null && this.oGL.objectArray.indexOf(targetRef) != -1) {
 				this.textBox.text += "\n\n*Current Target*"
-				this.textBox.text += "\nObject Array Index: " + targetRef.indx;
+				this.textBox.text += "\n" + this.targetRef.name;
+				this.textBox.text += "\nObject Array Index: " + this.targetRef.indx;
 				if (targetRef.hasOwnProperty('isHostile')) {this.textBox.text += "\nisHostile: " + targetRef.isHostile};
 				if (targetRef.hasOwnProperty('AI')) {this.textBox.text += "\nCurrent Action: " + targetRef.AI.curAction};
 			}
